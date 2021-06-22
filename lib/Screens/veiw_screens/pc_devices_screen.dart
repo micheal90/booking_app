@@ -25,10 +25,10 @@ class PcDevicesScreen extends StatelessWidget {
                 mainAxisSpacing: 10),
             itemBuilder: (context, index) => GestureDetector(
               onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => DeviceDetailsScreen(
-                              deviceModel: value.pcDevicesList[index]))),
-                          child: DeviceItemView(
-                  imageUrl: value.pcDevicesList[index].imageUrl,
+                  builder: (_) => DeviceDetailsScreen(
+                      deviceModel: value.pcDevicesList[index]))),
+              child: DeviceItemView(
+                  imageUrl: value.pcDevicesList[index].imageUrl[0],
                   name: value.pcDevicesList[index].name,
                   screenSize: value.pcDevicesList[index].screenSize),
             ),

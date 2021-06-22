@@ -18,9 +18,9 @@ class MainDrawer extends StatelessWidget {
               title: Text("Booking App"),
               automaticallyImplyLeading: true,
               centerTitle: true,
-              leading: IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: Icon(Icons.menu)),
+              // leading: IconButton(
+              //     onPressed: () => Navigator.of(context).pop(),
+              //     icon: Icon(Icons.menu)),
             ),
             CustomListTile(
               title: 'Add Employee',

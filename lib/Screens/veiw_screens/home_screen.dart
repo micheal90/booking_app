@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
           centerTitle: true,
         ),
         body: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(children: [
               CustomText(
                 text: 'Categories',
@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           builder: (_) => DeviceDetailsScreen(
                               deviceModel: value.allDevicesList[index]))),
                       child: DeviceItemView(
-                          imageUrl: value.allDevicesList[index].imageUrl,
+                          imageUrl: value.allDevicesList[index].imageUrl[0],
                           name: value.allDevicesList[index].name,
                           screenSize: value.allDevicesList[index].screenSize),
                     ),

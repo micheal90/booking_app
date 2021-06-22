@@ -28,7 +28,7 @@ class AndroidDevicesScreen extends StatelessWidget {
                           builder: (_) => DeviceDetailsScreen(
                               deviceModel: value.androidDevicesList[index]))),
                           child: DeviceItemView(
-                  imageUrl: value.androidDevicesList[index].imageUrl,
+                  imageUrl: value.androidDevicesList[index].imageUrl[0],
                   name: value.androidDevicesList[index].name,
                   screenSize: value.androidDevicesList[index].screenSize),
             ),

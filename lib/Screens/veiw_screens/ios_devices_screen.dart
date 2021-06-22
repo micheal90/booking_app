@@ -28,7 +28,7 @@ class IosDevicesScreen extends StatelessWidget {
                           builder: (_) => DeviceDetailsScreen(
                               deviceModel: value.iosDevicesList[index]))),
                           child: DeviceItemView(
-                  imageUrl: value.iosDevicesList[index].imageUrl,
+                  imageUrl: value.iosDevicesList[index].imageUrl[0],
                   name: value.iosDevicesList[index].name,
                   screenSize: value.iosDevicesList[index].screenSize),
             ),

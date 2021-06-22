@@ -49,7 +49,7 @@ class DevicesManagementScreen extends StatelessWidget {
                           builder: (_) => EditDeviceScreen(
                               deviceModel: value.allDevicesList[index]))),
                               child: DeviceItemView(
-                    imageUrl: value.allDevicesList[index].imageUrl,
+                    imageUrl: value.allDevicesList[index].imageUrl[0],
                     name: value.allDevicesList[index].name,
                     screenSize: value.allDevicesList[index].screenSize),
               ),

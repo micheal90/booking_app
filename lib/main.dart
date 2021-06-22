@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         ),
         home: snapshot.connectionState == ConnectionState.waiting
             ? SplashScreen()
-            : HomeScreen()
+            : LoginScreen()
       ),
     );
   }

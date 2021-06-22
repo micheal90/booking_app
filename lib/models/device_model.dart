@@ -1,4 +1,5 @@
 
+
 class DeviceModel {
   String name;
   String model;
@@ -6,7 +7,7 @@ class DeviceModel {
   String type;
     String screenSize;
   String battery;
-  String imageUrl;
+  List<String> imageUrl;
   DeviceModel({
     required this.name,
     required this.model,
@@ -16,6 +17,10 @@ class DeviceModel {
     required this.battery,
      required this.imageUrl,
   });
+
+  
+ 
+
 
   Map<String, dynamic> toMap() {
     return {
@@ -37,9 +42,9 @@ class DeviceModel {
       type: map['type'],
       screenSize: map['screenSize'],
       battery: map['battery'],
-      imageUrl: map['imageUrl'],
+      imageUrl: List<String>.from(map['imageUrl']),
     );
   }
 
- 
+  
 }

@@ -32,6 +32,7 @@ dependencies:
   flutter_native_splash: ^1.2.0
   provider: ^5.0.0
   multi_image_picker2: ^5.0.2
+  carousel_slider: ^4.0.0
 
 dev_dependencies:
   flutter_test:
