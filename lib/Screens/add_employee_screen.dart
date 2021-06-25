@@ -1,16 +1,17 @@
 import 'dart:io';
 
 import 'package:booking_app/constants.dart';
+import 'package:booking_app/providers/home_provider.dart';
 import 'package:booking_app/widgets_model/custom_add_text_form_field.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class AddEmployeeScreen extends StatelessWidget {
   final picker = ImagePicker();
   late File image;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,37 +20,38 @@ class AddEmployeeScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-              child: Padding(
+        child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-            
-              Stack(clipBehavior: Clip.none, children: [
-                GestureDetector(
-                  onTap: () {},
-                  child: CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey,
-                      //check if image not equal null to show image saved in db
-                      backgroundImage: AssetImage('assets/images/profile.png')),
-                ),
-                Positioned(
-                  bottom: -5,
-                  right: -10,
-                  child: Container(
-                      //padding: EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(40)),
-                      child: IconButton(
-                        onPressed: () {
-                          pickedDialog(context);
-                        },
-                        icon: Icon(Icons.edit),
-                      )),
-                )
-              ]),
-              SizedBox(height: 15,),
+              // Stack(clipBehavior: Clip.none, children: [
+              //   GestureDetector(
+              //     onTap: () {},
+              //     child: CircleAvatar(
+              //         radius: 50,
+              //         backgroundColor: Colors.grey,
+              //         //check if image not equal null to show image saved in db
+              //         backgroundImage: AssetImage('assets/images/profile.png')),
+              //   ),
+              //   Positioned(
+              //     bottom: -5,
+              //     right: -10,
+              //     child: Container(
+              //         //padding: EdgeInsets.all(6),
+              //         decoration: BoxDecoration(
+              //             color: Colors.grey.shade300,
+              //             borderRadius: BorderRadius.circular(40)),
+              //         child: IconButton(
+              //           onPressed: () {
+              //             pickedDialog(context);
+              //           },
+              //           icon: Icon(Icons.edit),
+              //         )),
+              //   )
+              // ]),
+              SizedBox(
+                height: 15,
+              ),
               CustomAddTextFormField(
                 label: 'Name',
                 onSave: (value) {},
@@ -63,7 +65,7 @@ class AddEmployeeScreen extends StatelessWidget {
                 onSave: (value) {},
                 validator: (value) {},
               ),
-               SizedBox(
+              SizedBox(
                 height: 10,
               ),
               CustomAddTextFormField(
@@ -79,7 +81,7 @@ class AddEmployeeScreen extends StatelessWidget {
                 onSave: (value) {},
                 validator: (value) {},
               ),
-             SizedBox(
+              SizedBox(
                 height: 10,
               ),
               CustomAddTextFormField(
@@ -87,7 +89,7 @@ class AddEmployeeScreen extends StatelessWidget {
                 onSave: (value) {},
                 validator: (value) {},
               ),
-               SizedBox(
+              SizedBox(
                 height: 10,
               ),
               CustomAddTextFormField(
@@ -98,7 +100,12 @@ class AddEmployeeScreen extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              CustomElevatedButton(text: 'Add',)
+              CustomElevatedButton(
+                text: 'Add',
+                onPressed: () {
+                  Provider.of<HomeProvider>(context,listen: false).addEmplyee();
+                },
+              )
             ],
           ),
         ),

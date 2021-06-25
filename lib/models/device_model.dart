@@ -1,11 +1,11 @@
 
-
 class DeviceModel {
   String name;
   String model;
   String os;
   String type;
-    String screenSize;
+  bool isBooked;
+  String screenSize;
   String battery;
   List<String> imageUrl;
   DeviceModel({
@@ -13,14 +13,13 @@ class DeviceModel {
     required this.model,
     required this.os,
     required this.type,
-       required this.screenSize,
+    required this.isBooked,
+    required this.screenSize,
     required this.battery,
-     required this.imageUrl,
+    required this.imageUrl,
   });
 
   
- 
-
 
   Map<String, dynamic> toMap() {
     return {
@@ -28,6 +27,7 @@ class DeviceModel {
       'model': model,
       'os': os,
       'type': type,
+      'isBokked': isBooked,
       'screenSize': screenSize,
       'battery': battery,
       'imageUrl': imageUrl,
@@ -40,11 +40,11 @@ class DeviceModel {
       model: map['model'],
       os: map['os'],
       type: map['type'],
+      isBooked: map['isBokked'],
       screenSize: map['screenSize'],
       battery: map['battery'],
       imageUrl: List<String>.from(map['imageUrl']),
     );
   }
 
-  
 }

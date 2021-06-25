@@ -7,10 +7,10 @@ import 'package:booking_app/Screens/splash_screen.dart';
 import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/providers/home_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider.value(value: AuthProvider()),
@@ -26,15 +26,14 @@ class MyApp extends StatelessWidget {
     return FutureBuilder(
       future: Future.delayed(Duration(seconds: 1)),
       builder: (context, snapshot) => MaterialApp(
-        title: 'Booking App',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: snapshot.connectionState == ConnectionState.waiting
-            ? SplashScreen()
-            : LoginScreen()
-      ),
+          title: 'Booking App',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: snapshot.connectionState == ConnectionState.waiting
+              ? SplashScreen()
+              : HomeScreen()),
     );
   }
 }

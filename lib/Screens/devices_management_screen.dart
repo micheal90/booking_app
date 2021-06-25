@@ -12,7 +12,7 @@ class DevicesManagementScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Reserved Devices'),
+        title: Text('Devices Management'),
       ),
       body: Consumer<HomeProvider>(
         builder: (context, value, child) => ListView.separated(
@@ -37,18 +37,17 @@ class DevicesManagementScreen extends StatelessWidget {
               ),
             ),
             onDismissed: (direction) {
-              //delete the device from database
-              print('the device is deleted');
+              Provider.of<HomeProvider>(context,listen: false).deleteDevice();
             },
             key: UniqueKey(),
             child: Container(
               height: 200,
               width: double.infinity,
               child: GestureDetector(
-                onTap: () =>Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => EditDeviceScreen(
-                              deviceModel: value.allDevicesList[index]))),
-                              child: DeviceItemView(
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => EditDeviceScreen(
+                        deviceModel: value.allDevicesList[index]))),
+                child: DeviceItemView(
                     imageUrl: value.allDevicesList[index].imageUrl[0],
                     name: value.allDevicesList[index].name,
                     screenSize: value.allDevicesList[index].screenSize),

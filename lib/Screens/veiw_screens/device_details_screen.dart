@@ -1,4 +1,6 @@
+import 'package:booking_app/Screens/book_device_screen.dart';
 import 'package:booking_app/constants.dart';
+import 'package:booking_app/providers/home_provider.dart';
 import 'package:booking_app/widgets_model/custom_container_device_details.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
@@ -6,6 +8,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:booking_app/models/device_model.dart';
+import 'package:provider/provider.dart';
 
 class DeviceDetailsScreen extends StatelessWidget {
   final DeviceModel deviceModel;
@@ -107,7 +110,9 @@ class DeviceDetailsScreen extends StatelessWidget {
                 ),
                 Container(
                   child: CustomElevatedButton(
-                    text: 'Booked',
+                    text: 'Booke',
+                    onPressed: () => Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (_)=>BookDeviceScreen(deviceModel: deviceModel))),
                   ),
                 )
               ],

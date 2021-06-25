@@ -21,6 +21,14 @@ class EditDeviceScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Edit Device"),
         centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                Provider.of<HomeProvider>(context, listen: false)
+                    .deleteDevice();
+              },
+              icon: Icon(Icons.delete_outline))
+        ],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -28,7 +36,6 @@ class EditDeviceScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              
               CustomAddTextFormField(
                 initialValue: deviceModel.name,
                 label: 'Device Name',
@@ -120,7 +127,8 @@ class EditDeviceScreen extends StatelessWidget {
               CustomElevatedButton(
                 text: 'Update',
                 onPressed: () {
-                  //update function
+                  Provider.of<HomeProvider>(context, listen: false)
+                      .updateDevice();
                 },
               )
             ],

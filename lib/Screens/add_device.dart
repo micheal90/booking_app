@@ -170,6 +170,9 @@ class AddDeviceScreen extends StatelessWidget {
               ),
               CustomElevatedButton(
                 text: 'Add',
+                onPressed:(){
+                   Provider.of<HomeProvider>(context,listen: false).addDevice();
+                },
               )
             ],
           ),

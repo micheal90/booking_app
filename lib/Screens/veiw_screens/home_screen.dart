@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     Provider.of<HomeProvider>(context, listen: false).filterDevices();
+
     super.initState();
   }
 
@@ -42,79 +43,81 @@ class _HomeScreenState extends State<HomeScreen> {
           centerTitle: true,
         ),
         body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(children: [
-              CustomText(
-                text: 'Categories',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => AndroidDevicesScreen())),
-                    child: CategoryWidget(
-                      text: categories[0].name,
-                      imageUrl: categories[0].imagUrl,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => IosDevicesScreen())),
-                    child: CategoryWidget(
-                      text: categories[1].name,
-                      imageUrl: categories[1].imagUrl,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => PcDevicesScreen())),
-                    child: CategoryWidget(
-                      text: categories[2].name,
-                      imageUrl: categories[2].imagUrl,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              CustomText(
-                text: 'Recent Add',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Expanded(
-                child: Consumer<HomeProvider>(
-                  builder: (context, value, child) => GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1,
-                        crossAxisSpacing: 10,
-                        //mainAxisExtent: 200,
-                        mainAxisSpacing: 10),
-                    itemBuilder: (context, index) => GestureDetector(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (_) => DeviceDetailsScreen(
-                              deviceModel: value.allDevicesList[index]))),
-                      child: DeviceItemView(
-                          imageUrl: value.allDevicesList[index].imageUrl[0],
-                          name: value.allDevicesList[index].name,
-                          screenSize: value.allDevicesList[index].screenSize),
-                    ),
-                    itemCount: value.allDevicesList.length,
-                  ),
+              padding: const EdgeInsets.all(8.0),
+              child: Column(children: [
+                CustomText(
+        text: 'Categories',
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
                 ),
-              )
-            ])),
+                SizedBox(
+        height: 15,
+                ),
+                Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AndroidDevicesScreen())),
+            child: CategoryWidget(
+              text: categories[0].name,
+              imageUrl: categories[0].imagUrl,
+            ),
+          ),
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => IosDevicesScreen())),
+            child: CategoryWidget(
+              text: categories[1].name,
+              imageUrl: categories[1].imagUrl,
+            ),
+          ),
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => PcDevicesScreen())),
+            child: CategoryWidget(
+              text: categories[2].name,
+              imageUrl: categories[2].imagUrl,
+            ),
+          ),
+        ],
+                ),
+                SizedBox(
+        height: 15,
+                ),
+                CustomText(
+        text: 'Recent Add',
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+                ),
+                SizedBox(
+        height: 15,
+                ),
+                Expanded(
+        child: Consumer<HomeProvider>(
+          builder: (context, value, child) => GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1,
+                  crossAxisSpacing: 10,
+                  //mainAxisExtent: 200,
+                  mainAxisSpacing: 10),
+              itemBuilder: (context, index) => GestureDetector(
+                onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => DeviceDetailsScreen(
+            deviceModel: value.devicesNotBookedList[index]))),
+                child: DeviceItemView(
+                    imageUrl:
+            value.devicesNotBookedList[index].imageUrl[0],
+                    name: value.devicesNotBookedList[index].name,
+                    screenSize:
+            value.devicesNotBookedList[index].screenSize),
+              ),
+              itemCount: value.devicesNotBookedList.length,
+            ),
+        ),
+                )
+              ])),
         drawer: MainDrawer());
   }
 }
