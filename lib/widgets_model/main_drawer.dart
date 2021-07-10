@@ -1,5 +1,3 @@
-import 'package:booking_app/Screens/add_device.dart';
-import 'package:booking_app/Screens/add_employee_screen.dart';
 import 'package:booking_app/Screens/categories_mangement.dart';
 import 'package:booking_app/Screens/devices_management_screen.dart';
 import 'package:booking_app/Screens/employees_management_screen.dart';

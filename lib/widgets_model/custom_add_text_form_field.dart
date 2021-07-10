@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:booking_app/widgets_model/custom_text.dart';
-
 class CustomAddTextFormField extends StatelessWidget {
   final String? label, hint, initialValue;
-  Function? onSave;
-  Function? validator;
-  TextEditingController? controller;
-  TextInputType? keyboardType;
+  final Function? onSave;
+  final Function? validator;
+  final TextEditingController? controller;
+  final TextInputType? keyboardType;
 
   CustomAddTextFormField({
     this.controller,
@@ -24,7 +22,6 @@ class CustomAddTextFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       initialValue: initialValue,
-
       onSaved: onSave as void Function(String?)?,
       validator: validator as String? Function(String?)?,
       decoration: InputDecoration(

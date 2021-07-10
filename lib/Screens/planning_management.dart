@@ -1,6 +1,5 @@
 import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/custom_container_planning.dart';
-import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/main_drawer.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';

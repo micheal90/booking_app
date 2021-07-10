@@ -1,9 +1,5 @@
-import 'package:booking_app/Screens/book_device_screen.dart';
-import 'package:booking_app/Screens/edit_device_screen.dart';
-import 'package:booking_app/constants.dart';
 import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/custom_container_device_details.dart';
-import 'package:booking_app/widgets_model/custom_elevated_button.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 

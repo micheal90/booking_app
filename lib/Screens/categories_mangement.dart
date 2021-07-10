@@ -1,9 +1,7 @@
 import 'package:booking_app/constants.dart';
 import 'package:booking_app/providers/main_provider.dart';
-import 'package:booking_app/widgets_model/custom_add_text_form_field.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
-import 'package:booking_app/widgets_model/custom_text_form_field.dart';
 import 'package:booking_app/widgets_model/main_drawer.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +10,8 @@ import 'package:provider/provider.dart';
 class CategoriesManagementScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKeyUpdate = GlobalKey();
   final GlobalKey<FormState> _formKeyAdd = GlobalKey();
-  TextEditingController nameAddController = TextEditingController();
-  TextEditingController imageUrlAddController = TextEditingController();
+  final TextEditingController nameAddController = TextEditingController();
+  final TextEditingController imageUrlAddController = TextEditingController();
 
   void update(BuildContext context, MainProvider value) async {
     FocusScope.of(context).unfocus();

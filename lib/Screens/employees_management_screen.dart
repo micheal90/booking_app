@@ -1,8 +1,6 @@
 import 'package:booking_app/Screens/add_admin.dart';
-import 'package:booking_app/Screens/add_device.dart';
 import 'package:booking_app/Screens/add_employee_screen.dart';
 import 'package:booking_app/Screens/employee_data_screen.dart';
-import 'package:booking_app/models/employee_model.dart';
 import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/main_drawer.dart';

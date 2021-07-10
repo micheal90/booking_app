@@ -1,7 +1,5 @@
 import 'package:booking_app/Screens/forgot_password_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/bottom_navigation_bar_screen.dart';
-import 'package:booking_app/Screens/veiw_screens/home_screen.dart';
-import 'package:booking_app/Screens/signup_screen.dart';
 import 'package:booking_app/constants.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';

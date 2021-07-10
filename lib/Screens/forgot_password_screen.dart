@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import '../constants.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-  TextEditingController _emailController = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey();
+ final  TextEditingController _emailController = TextEditingController();
+ final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {

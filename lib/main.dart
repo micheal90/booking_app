@@ -1,8 +1,5 @@
 import 'package:booking_app/Screens/login_screen.dart';
-import 'package:booking_app/Screens/planning_management.dart';
-import 'package:booking_app/Screens/veiw_screens/bottom_navigation_bar_screen.dart';
 import 'package:booking_app/Screens/splash_screen.dart';
-import 'package:booking_app/Screens/veiw_screens/home_screen.dart';
 import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/providers/main_provider.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';

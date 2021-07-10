@@ -1,5 +1,4 @@
 import 'package:booking_app/Screens/veiw_screens/device_details_screen.dart';
-import 'package:booking_app/models/device_model.dart';
 import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/device_item_view.dart';
 import 'package:flutter/material.dart';

@@ -271,14 +271,7 @@ class MainProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future addAddmin({
-    String? name,
-    String? lastName,
-    String? email,
-    String? password,
-  }) async {
-    print('add admin');
-  }
+  
 
   Future addDevice({
     String? deviceName,

@@ -1,18 +1,13 @@
-import 'package:booking_app/Screens/add_employee_screen.dart';
-import 'package:booking_app/Screens/add_device.dart';
-import 'package:booking_app/Screens/devices_management_screen.dart';
+
 import 'package:booking_app/Screens/categories_mangement.dart';
-import 'package:booking_app/Screens/employees_management_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/device_details_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/android_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/ios_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/others_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/pc_devices_screen.dart';
 import 'package:booking_app/constants.dart';
-import 'package:booking_app/models/category_model.dart';
-import 'package:booking_app/models/device_model.dart';
+
 import 'package:booking_app/providers/main_provider.dart';
-import 'package:booking_app/widgets_model/custom_list_tile.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/device_item_view.dart';
 import 'package:booking_app/widgets_model/gatecory_widget.dart';

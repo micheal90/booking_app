@@ -1,12 +1,9 @@
 import 'dart:io';
 
 import 'package:booking_app/constants.dart';
-import 'package:booking_app/models/employee_model.dart';
 import 'package:booking_app/providers/auth_provider.dart';
-import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/custom_add_text_form_field.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
-import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';

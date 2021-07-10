@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CustomText extends StatelessWidget {
-  String? text;
-  double fontSize;
-  Color? color;
-  Alignment alignment;
-  FontWeight? fontWeight;
-  TextOverflow? overflow;
-  double? height;
-  int? maxLines;
-  TextAlign? textAlign;
+ final String? text;
+ final double fontSize;
+ final Color? color;
+ final Alignment alignment;
+ final FontWeight? fontWeight;
+ final TextOverflow? overflow;
+ final double? height;
+ final int? maxLines;
+ final TextAlign? textAlign;
 
   CustomText(
       {this.text = "",
