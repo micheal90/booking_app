@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:booking_app/constants.dart';
-import 'package:booking_app/providers/home_provider.dart';
+import 'package:booking_app/models/employee_model.dart';
+import 'package:booking_app/providers/auth_provider.dart';
+import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/custom_add_text_form_field.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
@@ -9,9 +11,47 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
-class AddEmployeeScreen extends StatelessWidget {
+class AddEmployeeScreen extends StatefulWidget {
+  @override
+  _AddEmployeeScreenState createState() => _AddEmployeeScreenState();
+}
+
+class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _lastNController = TextEditingController();
+  TextEditingController _groupController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+  GlobalKey<FormState> _formkey = GlobalKey();
+  TextEditingController _phoneController = TextEditingController();
+
   final picker = ImagePicker();
+  bool isLoading = false;
   late File image;
+  void add(BuildContext context) async {
+    if (!_formkey.currentState!.validate()) return;
+
+    setState(() {
+      isLoading = true;
+    });
+    await Provider.of<AuthProvider>(context, listen: false)
+        .addEmplyee(
+      name: _nameController.text.trim(),
+      lastName: _lastNController.text.trim(),
+      occupationGroup: _groupController.text.trim(),
+      email: _emailController.text.trim(),
+      phone: _phoneController.text.trim(),
+    )
+        .then((value) {
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('User added')));
+    });
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,91 +62,97 @@ class AddEmployeeScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              // Stack(clipBehavior: Clip.none, children: [
-              //   GestureDetector(
-              //     onTap: () {},
-              //     child: CircleAvatar(
-              //         radius: 50,
-              //         backgroundColor: Colors.grey,
-              //         //check if image not equal null to show image saved in db
-              //         backgroundImage: AssetImage('assets/images/profile.png')),
-              //   ),
-              //   Positioned(
-              //     bottom: -5,
-              //     right: -10,
-              //     child: Container(
-              //         //padding: EdgeInsets.all(6),
-              //         decoration: BoxDecoration(
-              //             color: Colors.grey.shade300,
-              //             borderRadius: BorderRadius.circular(40)),
-              //         child: IconButton(
-              //           onPressed: () {
-              //             pickedDialog(context);
-              //           },
-              //           icon: Icon(Icons.edit),
-              //         )),
-              //   )
-              // ]),
-              SizedBox(
-                height: 15,
-              ),
-              CustomAddTextFormField(
-                label: 'Name',
-                onSave: (value) {},
-                validator: (value) {},
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomAddTextFormField(
-                label: 'Last Name',
-                onSave: (value) {},
-                validator: (value) {},
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomAddTextFormField(
-                label: 'Occupation Group',
-                onSave: (value) {},
-                validator: (value) {},
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomAddTextFormField(
-                label: 'Email',
-                onSave: (value) {},
-                validator: (value) {},
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomAddTextFormField(
-                label: 'password',
-                onSave: (value) {},
-                validator: (value) {},
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomAddTextFormField(
-                label: 'Phone',
-                onSave: (value) {},
-                validator: (value) {},
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              CustomElevatedButton(
-                text: 'Add',
-                onPressed: () {
-                  Provider.of<HomeProvider>(context,listen: false).addEmplyee();
-                },
-              )
-            ],
+          child: Form(
+            key: _formkey,
+            child: Column(
+              children: [
+                CustomAddTextFormField(
+                  controller: _nameController,
+                  label: 'Name',
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'Enter name';
+                    } else
+                      return null;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomAddTextFormField(
+                  controller: _lastNController,
+                  label: 'Last Name',
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'Enter last name';
+                    } else
+                      return null;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomAddTextFormField(
+                  controller: _groupController,
+                  label: 'Occupation Group',
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'Enter Occupation Group';
+                    } else
+                      return null;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomAddTextFormField(
+                  controller: _emailController,
+                  label: 'Email',
+                  validator: (String? value) {
+                    if (value!.isEmpty || !value.contains('@')) {
+                      return 'Enter a valid email';
+                    } else
+                      return null;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomAddTextFormField(
+                  controller: _passwordController,
+                  label: 'password',
+                  validator: (String? value) {
+                    if (value!.isEmpty || value.length < 6) {
+                      return 'Enter a valid password';
+                    } else
+                      return null;
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomAddTextFormField(
+                  controller: _phoneController,
+                  label: 'Phone',
+                  keyboardType: TextInputType.number,
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'Enter phone';
+                    } else
+                      return null;
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                isLoading
+                    ? CircularProgressIndicator()
+                    : CustomElevatedButton(
+                        text: 'Add',
+                        onPressed: () => add(context),
+                      )
+              ],
+            ),
           ),
         ),
       ),

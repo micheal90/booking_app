@@ -2,15 +2,20 @@ import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class DeviceItemView extends StatelessWidget {
-  String imageUrl;
-  String name;
-  String screenSize;
-  DeviceItemView({
-    Key? key,
-    required this.imageUrl,
-    required this.name,
-    required this.screenSize,
-  }) : super(key: key);
+ final  String imageUrl;
+ final String name;
+ final String screenSize;
+ final Widget? trailing;
+
+  const DeviceItemView(
+      {Key? key,
+      required this.imageUrl,
+      required this.name,
+      required this.screenSize,
+      this.trailing,
+      
+      })
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +28,8 @@ class DeviceItemView extends StatelessWidget {
             image: NetworkImage(
               imageUrl,
             ),
+            imageErrorBuilder: (context, error, stackTrace) =>
+                new Icon(Icons.error_outline_outlined),
             fit: BoxFit.fill,
           ),
           footer: GridTileBar(
@@ -31,10 +38,11 @@ class DeviceItemView extends StatelessWidget {
               color: Colors.white,
               text: name,
             ),
-            trailing: CustomText(
+            subtitle: CustomText(
               color: Colors.white,
               text: screenSize,
             ),
+            trailing:trailing ,
           ),
         ));
   }

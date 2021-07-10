@@ -1,8 +1,11 @@
 import 'package:booking_app/Screens/add_device.dart';
 import 'package:booking_app/Screens/add_employee_screen.dart';
+import 'package:booking_app/Screens/categories_mangement.dart';
 import 'package:booking_app/Screens/devices_management_screen.dart';
 import 'package:booking_app/Screens/employees_management_screen.dart';
+import 'package:booking_app/Screens/planning_management.dart';
 import 'package:booking_app/Screens/reserved_devices_screen.dart';
+import 'package:booking_app/Screens/veiw_screens/bottom_navigation_bar_screen.dart';
 import 'package:booking_app/widgets_model/custom_list_tile.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +15,6 @@ class MainDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-     
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -25,50 +27,53 @@ class MainDrawer extends StatelessWidget {
                   icon: Icon(Icons.menu)),
             ),
             CustomListTile(
-              title: 'Add Employee',
-              leading: Icon(Icons.person_add_sharp),
-              onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => AddEmployeeScreen())),
+              title: 'Home',
+              leading: Icon(Icons.home),
+              onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (context) => BottomNavigationBarScreen())),
             ),
-            CustomListTile(
-              title: 'Add Device',
-              leading: Icon(Icons.devices_sharp),
-              onTap: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => AddDeviceScreen())),
-            ),
+
             // CustomListTile(
             //     title: 'Add Planning',
             //     leading: Icon(Icons.playlist_add_rounded)),
-            CustomListTile(
-                title: 'Add Admin', leading: Icon(Icons.manage_accounts)),
+
             Divider(),
-            GestureDetector(
-              onTap:()=> Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => EmployeeManagementScreen())),
-                          child: CustomListTile(
-                title: 'Employees Management',
-                leading: Icon(Icons.attractions_outlined),
-              ),
+            CustomListTile(
+              onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (context) => EmployeeManagementScreen())),
+              title: 'Employees Management',
+              leading: Icon(Icons.attractions_outlined),
             ),
-            GestureDetector(
-              onTap:()=> Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => DevicesManagementScreen())),
-                          child: CustomListTile(
-                title: 'Divices Management',
-                leading: Icon(Icons.app_registration),
-              ),
+            CustomListTile(
+              onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (context) => DevicesManagementScreen())),
+              title: 'Divices Management',
+              leading: Icon(Icons.app_registration),
             ),
-            // CustomListTile(
-            //   title: 'Planning Management',
-            //   leading: Icon(Icons.margin),
-            // ),
-            GestureDetector(
-              onTap:()=> Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ReservedDevicesScreen())),
-                          child: CustomListTile(
-                  title: 'Reserved devices',
-                  leading: Icon(Icons.connect_without_contact)),
+            CustomListTile(
+              onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (context) => CategoriesManagementScreen())),
+              title: 'Categories Management',
+              leading: Icon(Icons.margin),
             ),
+            CustomListTile(
+              onTap:()=> Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                      builder: (context) => PlanningManagementScreen())),
+                  title: 'Planning Management',
+                  leading: Icon(Icons.schedule),
+            ),
+            CustomListTile(
+              onTap: () => Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                    builder: (context) => ReservedDevicesScreen())),
+                title: 'Reserved devices',
+                leading: Icon(Icons.connect_without_contact)),
+            
           ],
         ),
       ),

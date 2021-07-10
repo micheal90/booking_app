@@ -1,12 +1,12 @@
-class UserModel {
+class EmployeeModel {
   String id;
   String name;
   String lastName;
   String occupationGroup;
   String email;
-  List<String> imageUrl;
+  String imageUrl;
   String phone;
-  UserModel({
+  EmployeeModel({
     required this.id,
     required this.name,
     required this.lastName,
@@ -28,14 +28,14 @@ class UserModel {
     };
   }
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
+  factory EmployeeModel.fromMap(Map<String, dynamic> map) {
+    return EmployeeModel(
       id: map['id'],
       name: map['name'],
       lastName: map['lastName'],
       occupationGroup: map['occupationGroup'],
       email: map['email'],
-      imageUrl: List<String>.from(map['imageUrl']),
+      imageUrl: map['imageUrl'],
       phone: map['phone'],
     );
   }

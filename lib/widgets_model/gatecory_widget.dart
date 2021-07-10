@@ -21,9 +21,20 @@ class CategoryWidget extends StatelessWidget {
           height: 50,
           padding: EdgeInsets.all(5),
           decoration: BoxDecoration(
-              color: Colors.grey.shade200, borderRadius: BorderRadius.circular(50)),
-          //you must change to image.network to fetch image from DB
-          child: Image.asset(imageUrl),
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(50)),
+          child: ClipRRect(
+             borderRadius: BorderRadius.circular(50),
+                      child: FadeInImage(
+              placeholder: AssetImage('assets/images/loading.png'),
+                        image: NetworkImage(
+                imageUrl,
+                
+              ),
+              fit: BoxFit.fill,
+              imageErrorBuilder: (context, error, stackTrace) => new Icon(Icons.error_outline_outlined),
+            ),
+          ),
         ),
         SizedBox(
           height: 5,

@@ -1,20 +1,19 @@
 import 'package:booking_app/Screens/veiw_screens/device_details_screen.dart';
 import 'package:booking_app/models/device_model.dart';
 import 'package:booking_app/providers/main_provider.dart';
-import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/device_item_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AndroidDevicesScreen extends StatefulWidget {
+class OthersDevicesScreen extends StatefulWidget {
   @override
-  _AndroidDevicesScreenState createState() => _AndroidDevicesScreenState();
+  _OthersDevicesScreenState createState() => _OthersDevicesScreenState();
 }
 
-class _AndroidDevicesScreenState extends State<AndroidDevicesScreen> {
+class _OthersDevicesScreenState extends State<OthersDevicesScreen> {
   bool _isSearch = false;
   TextEditingController? searchController = TextEditingController();
-  //List<DeviceModel> searchList = [];
+  // List<DeviceModel> searchList = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +25,7 @@ class _AndroidDevicesScreenState extends State<AndroidDevicesScreen> {
                   controller: searchController,
                   onChanged: (val) {
                     setState(() {
-                      value.searchList = value.androidDevicesList
+                      value.searchList = value.othersDevicesList
                           .where((element) => element.name
                               .toLowerCase()
                               .contains(val.toLowerCase()))
@@ -45,7 +44,7 @@ class _AndroidDevicesScreenState extends State<AndroidDevicesScreen> {
                   style: TextStyle(color: Colors.white),
                 ),
               )
-            : Text("Android Devices"),
+            : Text("Others Devices"),
         actions: [
           IconButton(
               icon:
@@ -84,15 +83,15 @@ class _AndroidDevicesScreenState extends State<AndroidDevicesScreen> {
                 : GestureDetector(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => DeviceDetailsScreen(
-                            deviceId: value.androidDevicesList[index].id))),
+                            deviceId: value.othersDevicesList[index].id))),
                     child: DeviceItemView(
-                        imageUrl: value.androidDevicesList[index].imageUrl[0],
-                        name: value.androidDevicesList[index].name,
-                        screenSize: value.androidDevicesList[index].screenSize),
+                        imageUrl: value.othersDevicesList[index].imageUrl[0],
+                        name: value.othersDevicesList[index].name,
+                        screenSize: value.othersDevicesList[index].screenSize),
                   ),
             itemCount: searchController!.text.isNotEmpty
                 ? value.searchList.length
-                : value.androidDevicesList.length,
+                : value.othersDevicesList.length,
           ),
         ),
       ),

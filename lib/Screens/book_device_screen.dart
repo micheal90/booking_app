@@ -1,5 +1,5 @@
 import 'package:booking_app/constants.dart';
-import 'package:booking_app/providers/home_provider.dart';
+import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +22,7 @@ class BookDeviceScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Consumer<HomeProvider>(
+        child: Consumer<MainProvider>(
           builder: (context, value, child) => Column(
             children: [
               Container(

@@ -1,19 +1,24 @@
-import 'package:booking_app/Screens/forgot_password_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/home_screen.dart';
 import 'package:booking_app/Screens/login_screen.dart';
 import 'package:booking_app/constants.dart';
-import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
+  @override
+  _SignUpScreenState createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _emailController = TextEditingController();
+
   TextEditingController _passwordController = TextEditingController();
+
   GlobalKey<FormState> _formKey = GlobalKey();
-  bool _isShowPassword = false;
+
+  bool _isShowPassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +63,6 @@ class SignUpScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            
                             CustomTextFormField(
                                 controller: _emailController,
                                 label: 'Email',
@@ -79,45 +83,39 @@ class SignUpScreen extends StatelessWidget {
                             SizedBox(
                               height: 10,
                             ),
-                            Consumer<AuthProvider>(
-                              builder: (context, value, child) =>
-                                  CustomTextFormField(
-                                      controller: _passwordController,
-                                      label: 'Password',
-                                      hint: "Minimum 6 characters",
-                                      isPassword: value.isShowPassword.value
-                                          ? true
-                                          : false,
-                                      prefixIcon: Icons.lock,
-                                      suffixIcon: IconButton(
-                                        icon: value.isShowPassword.value
-                                            ? Icon(Icons.visibility_off_rounded)
-                                            : Icon(Icons.visibility),
-                                        onPressed: () {
-                                          //change show password state
-                                          value.changeShowPassword();
-                                        },
-                                      ),
-                                      type: TextInputType.text,
-                                      validate: (String? val) {
-                                        if (val!.isEmpty || val.length < 6) {
-                                          return "Password is too short";
-                                        }
-                                        return null;
-                                      },
-                                      onSave: (value) {
-                                        print('password: $value');
-                                      }),
-                            ),
+                            CustomTextFormField(
+                                controller: _passwordController,
+                                label: 'Password',
+                                hint: "Minimum 6 characters",
+                                isPassword: _isShowPassword ? true : false,
+                                prefixIcon: Icons.lock,
+                                suffixIcon: IconButton(
+                                  icon: _isShowPassword
+                                      ? Icon(Icons.visibility_off_rounded)
+                                      : Icon(Icons.visibility),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isShowPassword = !_isShowPassword;
+                                    });
+                                  },
+                                ),
+                                type: TextInputType.text,
+                                validate: (String? val) {
+                                  if (val!.isEmpty || val.length < 6) {
+                                    return "Password is too short";
+                                  }
+                                  return null;
+                                },
+                                onSave: (value) {
+                                  print('password: $value');
+                                }),
                             SizedBox(
                               height: 10,
                             ),
                             CustomTextFormField(
                                 label: 'Confirm Password',
                                 hint: '',
-                                isPassword: Provider.of<AuthProvider>(context)
-                                        .isShowPassword
-                                        .value
+                                isPassword: _isShowPassword
                                     ? true
                                     : false,
                                 prefixIcon: Icons.lock,
@@ -158,7 +156,8 @@ class SignUpScreen extends StatelessWidget {
                                 TextButton(
                                     onPressed: () => Navigator.of(context)
                                         .pushReplacement(MaterialPageRoute(
-                                            builder: (context) => LoginScreen())),
+                                            builder: (context) =>
+                                                LoginScreen())),
                                     child: CustomText(
                                       text: 'Login',
                                       color: KPrimaryColor,

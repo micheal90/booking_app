@@ -1,21 +1,37 @@
 import 'package:booking_app/Screens/book_device_screen.dart';
+import 'package:booking_app/Screens/edit_device_screen.dart';
 import 'package:booking_app/constants.dart';
-import 'package:booking_app/providers/home_provider.dart';
+import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/custom_container_device_details.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
-import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:booking_app/models/device_model.dart';
 import 'package:provider/provider.dart';
 
-class DeviceDetailsScreen extends StatelessWidget {
-  final DeviceModel deviceModel;
+class DeviceDetailsScreen extends StatefulWidget {
+  final String deviceId;
   DeviceDetailsScreen({
     Key? key,
-    required this.deviceModel,
+    required this.deviceId,
   }) : super(key: key);
+
+  @override
+  _DeviceDetailsScreenState createState() => _DeviceDetailsScreenState();
+}
+
+class _DeviceDetailsScreenState extends State<DeviceDetailsScreen> {
+  DeviceModel? deviceModel;
+  @override
+  void initState() {
+    deviceModel = Provider.of<MainProvider>(context, listen: false)
+        .findDeviceById(widget.deviceId);
+    super.initState();
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,19 +43,19 @@ class DeviceDetailsScreen extends StatelessWidget {
           backgroundColor: Colors.grey.shade300,
           flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                deviceModel.name,
+                deviceModel!.name,
                 style: TextStyle(
                     color: Colors.white, backgroundColor: Colors.black45),
               ),
               background: CarouselSlider.builder(
-                  itemCount: deviceModel.imageUrl.length,
+                  itemCount: deviceModel!.imageUrl.length,
                   itemBuilder: (context, index, realIndex) => Container(
                         width: double.infinity,
                         height: double.infinity,
                         child: FadeInImage(
                           placeholder: AssetImage('assets/images/loading.png'),
                           image: NetworkImage(
-                            deviceModel.imageUrl[index],
+                            deviceModel!.imageUrl[index],
                           ),
                           fit: BoxFit.fill,
                         ),
@@ -49,8 +65,8 @@ class DeviceDetailsScreen extends StatelessWidget {
                     viewportFraction: 1,
                     initialPage: 0,
                     enableInfiniteScroll: false,
-                    reverse: true,
-                    autoPlay: false,
+                    reverse: false,
+                    autoPlay: deviceModel!.imageUrl.length > 1 ? true : false,
                     autoPlayInterval: Duration(seconds: 3),
                     autoPlayAnimationDuration: Duration(milliseconds: 800),
                     autoPlayCurve: Curves.fastOutSlowIn,
@@ -75,46 +91,49 @@ class DeviceDetailsScreen extends StatelessWidget {
                 ),
                 CustomContainerDeviceDetail(
                   title: 'Type',
-                  detail: deviceModel.type.toUpperCase(),
+                  detail: deviceModel!.type.toUpperCase(),
                 ),
                 SizedBox(
                   height: 5,
                 ),
                 CustomContainerDeviceDetail(
                   title: 'Model',
-                  detail: deviceModel.model.toUpperCase(),
+                  detail: deviceModel!.model.toUpperCase(),
                 ),
                 SizedBox(
                   height: 5,
                 ),
                 CustomContainerDeviceDetail(
                   title: 'OS',
-                  detail: deviceModel.os.toUpperCase(),
+                  detail: deviceModel!.os.toUpperCase(),
                 ),
                 SizedBox(
                   height: 5,
                 ),
                 CustomContainerDeviceDetail(
                   title: 'Screen Size',
-                  detail: deviceModel.screenSize.toUpperCase(),
+                  detail: deviceModel!.screenSize.toUpperCase(),
                 ),
                 SizedBox(
                   height: 5,
                 ),
                 CustomContainerDeviceDetail(
                   title: 'Battery',
-                  detail: deviceModel.battery.toUpperCase(),
+                  detail: deviceModel!.battery.toUpperCase(),
                 ),
                 SizedBox(
                   height: 40,
                 ),
-                Container(
-                  child: CustomElevatedButton(
-                    text: 'Booke',
-                    onPressed: () => Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (_)=>BookDeviceScreen(deviceModel: deviceModel))),
-                  ),
-                )
+                // Container(
+                //   child: CustomElevatedButton(
+                //     text: 'Edit',
+                //     onPressed: () =>
+                //         Navigator.of(context).push(MaterialPageRoute(
+                //       builder: (_) =>
+                //           EditDeviceScreen(deviceId: deviceModel!.id),
+                //     )),
+                //   ),
+                // ),
               ],
             ),
           )

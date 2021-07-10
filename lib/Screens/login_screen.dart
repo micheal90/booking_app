@@ -1,20 +1,27 @@
 import 'package:booking_app/Screens/forgot_password_screen.dart';
+import 'package:booking_app/Screens/veiw_screens/bottom_navigation_bar_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/home_screen.dart';
 import 'package:booking_app/Screens/signup_screen.dart';
 import 'package:booking_app/constants.dart';
-import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey();
 
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController _emailController = TextEditingController();
+
+  TextEditingController _passwordController = TextEditingController();
+
+  GlobalKey<FormState> _formKey = GlobalKey();
+  bool _isShowPassword = true;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -78,37 +85,32 @@ class LoginScreen extends StatelessWidget {
                             SizedBox(
                               height: 10,
                             ),
-                            Consumer<AuthProvider>(
-                              builder: (BuildContext context, value,
-                                      Widget? child) =>
-                                  CustomTextFormField(
-                                      controller: _passwordController,
-                                      label: 'Password',
-                                      hint: "Minimum 6 characters",
-                                      isPassword: value.isShowPassword.value
-                                          ? true
-                                          : false,
-                                      prefixIcon: Icons.lock,
-                                      suffixIcon: IconButton(
-                                        icon: value.isShowPassword.value
-                                            ? Icon(Icons.visibility_off_rounded)
-                                            : Icon(Icons.visibility),
-                                        onPressed: () {
-                                          //change show password state
-                                          value.changeShowPassword();
-                                        },
-                                      ),
-                                      type: TextInputType.text,
-                                      validate: (String? val) {
-                                        if (val!.isEmpty || val.length < 6) {
-                                          return "Password is too short";
-                                        }
-                                        return null;
-                                      },
-                                      onSave: (value) {
-                                        print('password: $value');
-                                      }),
-                            ),
+                            CustomTextFormField(
+                                controller: _passwordController,
+                                label: 'Password',
+                                hint: "Minimum 6 characters",
+                                isPassword: _isShowPassword ? true : false,
+                                prefixIcon: Icons.lock,
+                                suffixIcon: IconButton(
+                                  icon: _isShowPassword
+                                      ? Icon(Icons.visibility_off_rounded)
+                                      : Icon(Icons.visibility),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isShowPassword = !_isShowPassword;
+                                    });
+                                  },
+                                ),
+                                type: TextInputType.text,
+                                validate: (String? val) {
+                                  if (val!.isEmpty || val.length < 6) {
+                                    return "Password is too short";
+                                  }
+                                  return null;
+                                },
+                                onSave: (value) {
+                                  print('password: $value');
+                                }),
                             SizedBox(
                               height: 10,
                             ),
@@ -132,30 +134,30 @@ class LoginScreen extends StatelessWidget {
                                   _formKey.currentState!.save();
                                   Navigator.of(context).pushReplacement(
                                       MaterialPageRoute(
-                                          builder: (context) => HomeScreen()));
+                                          builder: (context) => BottomNavigationBarScreen()));
                                 }
                               },
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomText(
-                                  text: "Don't have an account? ",
-                                ),
-                                TextButton(
-                                    onPressed: () => Navigator.of(context)
-                                        .pushReplacement(MaterialPageRoute(
-                                            builder: (context) =>
-                                                SignUpScreen())),
-                                    child: CustomText(
-                                      text: 'Sign Up',
-                                      color: KPrimaryColor,
-                                    ))
-                              ],
-                            )
+                            // SizedBox(
+                            //   height: 20,
+                            // ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.center,
+                            //   children: [
+                            //     CustomText(
+                            //       text: "Don't have an account? ",
+                            //     ),
+                            //     TextButton(
+                            //         onPressed: () => Navigator.of(context)
+                            //             .pushReplacement(MaterialPageRoute(
+                            //                 builder: (context) =>
+                            //                     SignUpScreen())),
+                            //         child: CustomText(
+                            //           text: 'Sign Up',
+                            //           color: KPrimaryColor,
+                            //         ))
+                            //   ],
+                            // )
                           ],
                         ),
                       ),
