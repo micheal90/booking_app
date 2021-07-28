@@ -1,9 +1,16 @@
+import 'dart:io';
+
 import 'package:booking_app/models/category_model.dart';
 import 'package:booking_app/models/device_model.dart';
 import 'package:booking_app/models/employee_model.dart';
 import 'package:booking_app/models/reserve_device_model.dart';
+import 'package:booking_app/sevices/firebase_storage_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_image_picker2/multi_image_picker2.dart';
+import 'package:flutter_native_image/flutter_native_image.dart';
+import '../sevices/firestore_device.dart';
 
 class MainProvider with ChangeNotifier {
   List<DeviceModel> allDevicesList = [
@@ -184,12 +191,14 @@ class MainProvider with ChangeNotifier {
         startDate: '01/07/2021',
         endDate: '20/07/2021'),
   ];
-  List<Asset> selectedImages = <Asset>[];
+
+  List<File> selectedImages = [];
   String error = 'No Error Detected';
   String categoryType = 'ANDROID';
   DateTime? startDateTime;
   DateTime? endDateTime;
   ValueNotifier<bool> loading = ValueNotifier(false);
+  FirestoreDevice firestoreDevice = FirestoreDevice();
 
   void changeStartDateTime(DateTime date) {
     startDateTime = date;
@@ -271,18 +280,39 @@ class MainProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  
-
-  Future addDevice({
-    String? deviceName,
-    String? modNum,
-    String? os,
-    String? screenSize,
-    String? battery,
-  }) async {
-    print('add device');
-    //add to database
-    // upload images and then clear list selectedImages
+  Future addDevice(
+      {String? deviceName,
+      String? modNum,
+      String? os,
+      String? screenSize,
+      String? battery}) async {
+    try {
+      //get doc id from firestore to set in deviceId
+      var devId = await firestoreDevice.getDocId();
+      //upload images to firebase storage and get urls
+      var imageUrls =
+          await FirebaseStorageImage().uploadFiles(selectedImages, devId);
+      //set device to database
+      await firestoreDevice.addDevice(
+          DeviceModel(
+              id: devId,
+              name: deviceName!,
+              model: modNum!,
+              os: os!,
+              type: categoryType,
+              isBooked: false,
+              screenSize: screenSize!,
+              battery: battery!,
+              imageUrl: imageUrls),
+          devId);
+      // clear lists after add to database
+      imageUrls.clear();
+      selectedImages.clear();
+    } on FirebaseException catch (e) {
+      throw e;
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future updateDevice({
@@ -294,11 +324,17 @@ class MainProvider with ChangeNotifier {
     battery,
   }) async {
     print('device updated');
+
     //update in database
     // upload new images and then clear list selectedImages
+    selectedImages.clear();
   }
 
   Future deleteDevice(String deviceId) async {
+
+await firestoreDevice.deleteDevice(deviceId);
+
+
 // must change all this body when link with database
 
     print('the device is deleted');
@@ -340,32 +376,25 @@ class MainProvider with ChangeNotifier {
     //must be update catigories list in database
   }
 
-  Future<void> loadAssets() async {
-    List<Asset> resultList = <Asset>[];
-    String _error = 'No Error Detected';
-    print('first');
-    try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 3,
-        enableCamera: true,
-        selectedAssets: selectedImages,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
-        materialOptions: MaterialOptions(
-          actionBarColor: "#abcdef",
-          actionBarTitle: "Booked App",
-          allViewTitle: "All Photos",
-          useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
-        ),
-      );
-    } on Exception catch (e) {
-      error = e.toString();
-      throw (e);
+  Future pickImages() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.custom,
+        allowCompression: true,
+        allowedExtensions: ['jpg', 'jpeg', 'png']);
+    if (result != null) {
+      var files = result.paths.map((path) => File(path!)).toList();
+      files.forEach((file) async {
+        print('befor :${file.lengthSync()}');
+        File compressedFile = await FlutterNativeImage.compressImage(
+          file.path,
+          quality: 50,
+        );
+        selectedImages.add(compressedFile);
+        notifyListeners();
+        print('after :${compressedFile.lengthSync()}');
+      });
     }
-    //you must saved the list in database
-    selectedImages = resultList;
-    error = _error;
-    notifyListeners();
   }
 
   Future deleteImage(int index, String id) async {

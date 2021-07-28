@@ -6,16 +6,19 @@ class CustomAddTextFormField extends StatelessWidget {
   final Function? validator;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
+  final bool? isPassword;
+  final Widget? suffixIcon;
 
-  CustomAddTextFormField({
-    this.controller,
-    this.label,
-    this.hint,
-    this.keyboardType,
-    this.initialValue,
-    this.onSave,
-    this.validator,
-  });
+  CustomAddTextFormField(
+      {this.controller,
+      this.label,
+      this.hint,
+      this.keyboardType,
+      this.initialValue,
+      this.onSave,
+      this.validator,
+      this.suffixIcon,
+      this.isPassword = false});
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +34,10 @@ class CustomAddTextFormField extends StatelessWidget {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
           hintStyle: TextStyle(
             color: Colors.grey,
-          )),
+          ),
+          suffixIcon: suffixIcon),
       keyboardType: keyboardType,
+      obscureText: isPassword!,
     );
   }
 }

@@ -123,6 +123,7 @@ class _EmployeeManagementScreenState extends State<EmployeeManagementScreen> {
                       text: 'No employee has been added yet',
                       fontSize: 30,
                       alignment: Alignment.center,
+                      textAlign: TextAlign.center,
                     ),
                   )
                 : ListView.separated(

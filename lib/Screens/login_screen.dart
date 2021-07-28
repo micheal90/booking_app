@@ -1,25 +1,52 @@
 import 'package:booking_app/Screens/forgot_password_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/bottom_navigation_bar_screen.dart';
 import 'package:booking_app/constants.dart';
+import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/custom_text_form_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key}) : super(key: key);
-
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  GlobalKey<FormState> _formKey = GlobalKey();
-  bool _isShowPassword = true;
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  bool isLoading = false;
+  void submit(BuildContext context, AuthProvider value) async {
+    FocusScope.of(context).unfocus();
+    if (!_formKey.currentState!.validate()) return;
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      await value.logInWithEmail(
+          _emailController.text.trim(), _passwordController.text.trim());
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => BottomNavigationBarScreen()));
+    } on FirebaseException catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(error.toString()),
+        duration: Duration(seconds: 5),
+      ));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('You can\'t login !\nThis email is not admin'),
+          duration: Duration(seconds: 5)));
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -59,104 +86,105 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Form(
                       key: _formKey,
                       child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomTextFormField(
-                                controller: _emailController,
-                                label: 'Email',
-                                hint: 'example@gmail.com',
-                                isPassword: false,
-                                prefixIcon: Icons.email,
-                                suffixIcon: null,
-                                type: TextInputType.emailAddress,
-                                validate: (String? val) {
-                                  if (val!.isEmpty || !val.contains('@')) {
-                                    return "Enter a valid email";
-                                  }
-                                  return null;
-                                },
-                                onSave: (value) {
-                                  print('Email: $value');
-                                }),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            CustomTextFormField(
-                                controller: _passwordController,
-                                label: 'Password',
-                                hint: "Minimum 6 characters",
-                                isPassword: _isShowPassword ? true : false,
-                                prefixIcon: Icons.lock,
-                                suffixIcon: IconButton(
-                                  icon: _isShowPassword
-                                      ? Icon(Icons.visibility_off_rounded)
-                                      : Icon(Icons.visibility),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isShowPassword = !_isShowPassword;
-                                    });
+                        child: Consumer<AuthProvider>(
+                          builder: (context, valueAuth, child) => Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CustomTextFormField(
+                                  controller: _emailController,
+                                  label: 'Email',
+                                  hint: 'example@gmail.com',
+                                  isPassword: false,
+                                  prefixIcon: Icons.email,
+                                  suffixIcon: null,
+                                  type: TextInputType.emailAddress,
+                                  validate: (String? val) {
+                                    if (val!.isEmpty || !val.contains('@')) {
+                                      return "Enter a valid email";
+                                    }
+                                    return null;
                                   },
-                                ),
-                                type: TextInputType.text,
-                                validate: (String? val) {
-                                  if (val!.isEmpty || val.length < 6) {
-                                    return "Password is too short";
-                                  }
-                                  return null;
-                                },
-                                onSave: (value) {
-                                  print('password: $value');
-                                }),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          ForgotPasswordScreen()));
-                                },
-                                child: CustomText(
-                                  text: 'Forgot Password?',
-                                  alignment: Alignment.centerRight,
-                                )),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            CustomElevatedButton(
-                              text: 'LOGIN',
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) => BottomNavigationBarScreen()));
-                                }
-                              },
-                            ),
-                            // SizedBox(
-                            //   height: 20,
-                            // ),
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.center,
-                            //   children: [
-                            //     CustomText(
-                            //       text: "Don't have an account? ",
-                            //     ),
-                            //     TextButton(
-                            //         onPressed: () => Navigator.of(context)
-                            //             .pushReplacement(MaterialPageRoute(
-                            //                 builder: (context) =>
-                            //                     SignUpScreen())),
-                            //         child: CustomText(
-                            //           text: 'Sign Up',
-                            //           color: KPrimaryColor,
-                            //         ))
-                            //   ],
-                            // )
-                          ],
+                                  onSave: (value) {
+                                    print('Email: $value');
+                                  }),
+                              SizedBox(
+                                height: 10,
+                              ),
+
+                              CustomTextFormField(
+                                  controller: _passwordController,
+                                  label: 'Password',
+                                  hint: "Minimum 6 characters",
+                                  isPassword: valueAuth.isShowPassword.value
+                                      ? true
+                                      : false,
+                                  prefixIcon: Icons.lock,
+                                  suffixIcon: IconButton(
+                                    icon: valueAuth.isShowPassword.value
+                                        ? Icon(Icons.visibility_off_rounded)
+                                        : Icon(Icons.visibility),
+                                    onPressed: () {
+                                      valueAuth.changeShowPassword();
+                                    },
+                                  ),
+                                  type: TextInputType.text,
+                                  validate: (String? val) {
+                                    if (val!.isEmpty || val.length < 6) {
+                                      return "Password is too short";
+                                    }
+                                    return null;
+                                  },
+                                  onSave: (value) {
+                                    print('password: $value');
+                                  }),
+
+                              SizedBox(
+                                height: 10,
+                              ),
+                              GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ForgotPasswordScreen()));
+                                  },
+                                  child: CustomText(
+                                    text: 'Forgot Password?',
+                                    alignment: Alignment.centerRight,
+                                  )),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              isLoading
+                                  ? CircularProgressIndicator()
+                                  : CustomElevatedButton(
+                                      text: 'LOGIN',
+                                      onPressed: () =>
+                                          submit(context, valueAuth),
+                                    ),
+                              // SizedBox(
+                              //   height: 20,
+                              // ),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.center,
+                              //   children: [
+                              //     CustomText(
+                              //       text: "Don't have an account? ",
+                              //     ),
+                              //     TextButton(
+                              //         onPressed: () => Navigator.of(context)
+                              //             .pushReplacement(MaterialPageRoute(
+                              //                 builder: (context) =>
+                              //                     SignUpScreen())),
+                              //         child: CustomText(
+                              //           text: 'Sign Up',
+                              //           color: KPrimaryColor,
+                              //         ))
+                              //   ],
+                              // )
+                            ],
+                          ),
                         ),
                       ),
                     ),

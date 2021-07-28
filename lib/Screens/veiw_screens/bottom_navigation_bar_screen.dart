@@ -25,7 +25,6 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   @override
   void initState() {
     Provider.of<MainProvider>(context, listen: false).filterDevices();
-
     super.initState();
   }
 

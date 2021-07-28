@@ -1,11 +1,14 @@
 import 'package:booking_app/Screens/categories_mangement.dart';
 import 'package:booking_app/Screens/devices_management_screen.dart';
 import 'package:booking_app/Screens/employees_management_screen.dart';
+import 'package:booking_app/Screens/login_screen.dart';
 import 'package:booking_app/Screens/planning_management.dart';
 import 'package:booking_app/Screens/reserved_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/bottom_navigation_bar_screen.dart';
+import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/widgets_model/custom_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({Key? key}) : super(key: key);
@@ -59,19 +62,27 @@ class MainDrawer extends StatelessWidget {
               leading: Icon(Icons.margin),
             ),
             CustomListTile(
-              onTap:()=> Navigator.of(context).pushReplacement(
+              onTap: () => Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                       builder: (context) => PlanningManagementScreen())),
-                  title: 'Planning Management',
-                  leading: Icon(Icons.schedule),
+              title: 'Planning Management',
+              leading: Icon(Icons.schedule),
             ),
             CustomListTile(
-              onTap: () => Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                    builder: (context) => ReservedDevicesScreen())),
+                onTap: () => Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => ReservedDevicesScreen())),
                 title: 'Reserved devices',
                 leading: Icon(Icons.connect_without_contact)),
-            
+            IconButton(
+                onPressed: () {
+                  Provider.of<AuthProvider>(context, listen: false)
+                      .logOut()
+                      .then((value) => Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => LoginScreen())),);
+                },
+                icon: Icon(Icons.logout))
           ],
         ),
       ),
