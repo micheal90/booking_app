@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:booking_app/models/admin_model.dart';
-import 'package:booking_app/models/user_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:booking_app/models/employee_model.dart';
+import 'package:booking_app/sevices/firestore_users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,11 +31,11 @@ class AuthProvider with ChangeNotifier {
         await getUserData(userCredential.user!.uid);
         //set user in sharedPreferences
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        String userData = json.encode({
+        String adminData = json.encode({
           'email': adminModel!.email,
           'adminId': userCredential.user!.uid,
         });
-        prefs.setString('adminData', userData);
+        prefs.setString('adminData', adminData);
 
         print('set User');
         print('user login');
@@ -45,11 +45,9 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future getUserData(String userId) async {
-    CollectionReference userCollectionRef =
-        FirebaseFirestore.instance.collection('admins');
-    await userCollectionRef.doc(userId).get().then((userData) {
-      adminModel = AdminModel.fromMap(userData.data() as Map<String, dynamic>);
+  Future getUserData(String adminId) async {
+    await FirestoreUsers().getadminData(adminId).then((data) {
+      adminModel = AdminModel.fromMap(data.data() as Map<String, dynamic>);
     });
     notifyListeners();
   }
@@ -57,9 +55,8 @@ class AuthProvider with ChangeNotifier {
   //try auto log in if get user from sharedpreferences
   Future<bool> tryAutoLogIn() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('adminData')) {
-      return false;
-    }
+    if (!prefs.containsKey('adminData')) return false;
+    
     Map<String, dynamic> extractUserData =
         json.decode(prefs.getString('adminData')!);
     //get all userData from database
@@ -93,8 +90,6 @@ class AuthProvider with ChangeNotifier {
     String? email,
     String? password,
   }) async {
-    CollectionReference adminCollectionRef =
-        FirebaseFirestore.instance.collection('admins');
     try {
       await _firebaseAuth
           .createUserWithEmailAndPassword(
@@ -108,7 +103,7 @@ class AuthProvider with ChangeNotifier {
           lastName: lastName!,
           email: email,
         );
-        await adminCollectionRef.doc(adminModel.id).set(adminModel.toMap());
+        await FirestoreUsers().addAdminData(adminModel);
       });
     } catch (e) {
       throw e;
@@ -122,13 +117,11 @@ class AuthProvider with ChangeNotifier {
       String? email,
       String? password,
       String? phone}) async {
-    CollectionReference userCollectionRef =
-        FirebaseFirestore.instance.collection('users');
     try {
       await _firebaseAuth
           .createUserWithEmailAndPassword(email: email!, password: password!)
           .then((userCredential) async {
-        UserModel userModel = UserModel(
+        EmployeeModel employeeModel = EmployeeModel(
             id: userCredential.user!.uid,
             name: name!,
             lastName: lastName!,
@@ -136,7 +129,7 @@ class AuthProvider with ChangeNotifier {
             email: email,
             imageUrl: '',
             phone: phone!);
-        await userCollectionRef.doc(userModel.id).set(userModel.toMap());
+        await FirestoreUsers().addEployeeData(employeeModel);
       });
     } catch (e) {
       throw e;

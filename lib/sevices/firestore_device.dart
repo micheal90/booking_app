@@ -18,8 +18,25 @@ class FirestoreDevice {
     await _deviceCollectionRef.doc(deviceId).set(deviceModel.toMap());
   }
 
-  Future updateDevice(DeviceModel deviceModel) async {
-    await _deviceCollectionRef.doc(deviceModel.id).update(deviceModel.toMap());
+  Future updateDevice(
+      {String? deviceId,
+      String? deviceName,
+      String? deviceModel,
+      String? type,
+      String? os,
+      String? screenSize,
+      String? battery,
+      List<String>? imageUrls}) async {
+    await _deviceCollectionRef.doc(deviceId).update({
+      'id': deviceId,
+      'name': deviceName,
+      'model': deviceModel,
+      'os': os,
+      'type': type,
+      'screenSize': screenSize,
+      'battery': battery,
+      'imageUrl': imageUrls,
+    });
   }
 
   Future deleteDevice(String deviceId) async {

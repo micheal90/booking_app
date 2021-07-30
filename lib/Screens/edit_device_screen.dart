@@ -179,9 +179,7 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
                                           Icons.cancel_outlined,
                                         ),
                                         onPressed: () async {
-                                          await Provider.of<MainProvider>(
-                                                  context,
-                                                  listen: false)
+                                          await valueMain
                                               .deleteImage(
                                                   index, deviceModel!.id)
                                               .then((value) {
@@ -197,6 +195,28 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
                         itemCount: deviceModel!.imageUrl.length),
                   ),
                   SizedBox(height: 15),
+                  CustomText(
+                    text: 'Select the type:',
+                  ),
+                  DropdownButton<String>(
+                    value: deviceModel!.type,
+                    icon: const Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: const TextStyle(color: KPrimaryColor, fontSize: 18),
+                    underline: Container(height: 2, color: Colors.black45),
+                    onChanged: (String? newValue) {
+                      valueMain.changeType(newValue!);
+                    },
+                    items: valueMain.categoryTypeList
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 10),
                   CustomAddTextFormField(
                     controller: nameController,
                     //initialValue: widget.deviceModel.name,
@@ -314,7 +334,7 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
                       ? CircularProgressIndicator()
                       : CustomElevatedButton(
                           text: 'Update',
-                          onPressed: () => update(context,valueMain),
+                          onPressed: () => update(context, valueMain),
                         )
                 ],
               ),

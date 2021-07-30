@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:booking_app/constants.dart';
 import 'package:booking_app/models/category_model.dart';
 import 'package:booking_app/models/device_model.dart';
 import 'package:booking_app/models/employee_model.dart';
@@ -323,18 +324,32 @@ class MainProvider with ChangeNotifier {
     screenSize,
     battery,
   }) async {
-    print('device updated');
+    try {
+      //upload images to firebase storage and get urls
+      var imageUrls =
+          await FirebaseStorageImage().uploadFiles(selectedImages, id);
+      await firestoreDevice.updateDevice(
+          deviceId: id,
+          deviceModel: modNum,
+          battery: battery,
+          deviceName: deviceName,
+          imageUrls: imageUrls,
+          os: os,
+          screenSize: screenSize,
+          type: categoryType);
 
-    //update in database
-    // upload new images and then clear list selectedImages
-    selectedImages.clear();
+      // clear lists after add to database
+      imageUrls.clear();
+      selectedImages.clear();
+      
+    } on FirebaseException catch (e) {
+      throw e;
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future deleteDevice(String deviceId) async {
-
-await firestoreDevice.deleteDevice(deviceId);
-
-
 // must change all this body when link with database
 
     print('the device is deleted');
