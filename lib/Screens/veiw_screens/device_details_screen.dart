@@ -1,3 +1,4 @@
+import 'package:booking_app/constants.dart';
 import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/custom_container_device_details.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -26,8 +27,6 @@ class _DeviceDetailsScreenState extends State<DeviceDetailsScreen> {
     super.initState();
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +42,7 @@ class _DeviceDetailsScreenState extends State<DeviceDetailsScreen> {
                 style: TextStyle(
                     color: Colors.white, backgroundColor: Colors.black45),
               ),
-              background: CarouselSlider.builder(
+              background:deviceModel!.imageUrl.isEmpty?Image.network(notImageAvailableUrl,fit: BoxFit.fill,) :CarouselSlider.builder(
                   itemCount: deviceModel!.imageUrl.length,
                   itemBuilder: (context, index, realIndex) => Container(
                         width: double.infinity,

@@ -19,6 +19,14 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
   TextEditingController _batteryController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey();
   bool isLoading = false;
+  List<String> categoryTypeList = ['ANDROID', 'IOS', 'PC', 'OTHERS'];
+  String categoryType = 'ANDROID';
+
+  void changeType(String type) {
+   setState(() {
+      categoryType = type;
+   });
+  }
 
   void addDevice(BuildContext context, MainProvider value) async {
     FocusScope.of(context).unfocus();
@@ -31,6 +39,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
           deviceName: _nameController.text.trim(),
           modNum: _modelController.text.trim(),
           os: _osController.text.trim(),
+          type: categoryType,
           screenSize: _screenSizeController.text.trim(),
           battery: _batteryController.text.trim());
 
@@ -66,16 +75,16 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
                     text: 'Select the type:',
                   ),
                   DropdownButton<String>(
-                    value: valueMain.categoryType,
+                    value:categoryType,
                     icon: const Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
                     style: const TextStyle(color: KPrimaryColor, fontSize: 18),
                     underline: Container(height: 2, color: Colors.black45),
                     onChanged: (String? newValue) {
-                      valueMain.changeType(newValue!);
+                      changeType(newValue!);
                     },
-                    items: valueMain.categoryTypeList
+                    items:categoryTypeList
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

@@ -84,7 +84,7 @@ class _OthersDevicesScreenState extends State<OthersDevicesScreen> {
                         builder: (_) => DeviceDetailsScreen(
                             deviceId: value.othersDevicesList[index].id))),
                     child: DeviceItemView(
-                        imageUrl: value.othersDevicesList[index].imageUrl[0],
+                        imageUrl: value.othersDevicesList[index].imageUrl,
                         name: value.othersDevicesList[index].name,
                         screenSize: value.othersDevicesList[index].screenSize),
                   ),

@@ -9,7 +9,7 @@ class FirestoreDevice {
     var value = await _deviceCollectionRef.get();
     return value.docs;
   }
-
+  //used when add new device
   Future<String> getDocId() async {
     return _deviceCollectionRef.doc().id;
   }

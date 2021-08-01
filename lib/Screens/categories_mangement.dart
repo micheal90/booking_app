@@ -29,13 +29,13 @@ class CategoriesManagementScreen extends StatelessWidget {
     FocusScope.of(context).unfocus();
     if (!_formKeyAdd.currentState!.validate()) return;
     _formKeyAdd.currentState!.save();
-    await value
-        .addCtegory(nameAddController.text, imageUrlAddController.text)
-        .then((value) {
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Category added')));
-    });
+    // await value
+    //     .addCtegory(nameAddController.text, imageUrlAddController.text)
+    //     .then((value) {
+    //   Navigator.of(context).pop();
+    //   ScaffoldMessenger.of(context)
+    //       .showSnackBar(SnackBar(content: Text('Category added')));
+    // });
   }
 
   @override

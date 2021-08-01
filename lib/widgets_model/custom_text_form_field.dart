@@ -19,7 +19,7 @@ class CustomTextFormField extends StatelessWidget {
      this.suffixIcon,
     required this.type,
     required this.validate,
-    required this.onSave,
+     this.onSave,
   });
 
   @override

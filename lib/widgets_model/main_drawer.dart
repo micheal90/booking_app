@@ -1,6 +1,6 @@
 import 'package:booking_app/Screens/categories_mangement.dart';
 import 'package:booking_app/Screens/devices_management_screen.dart';
-import 'package:booking_app/Screens/employees_management_screen.dart';
+import 'package:booking_app/Screens/users_management_screen.dart';
 import 'package:booking_app/Screens/login_screen.dart';
 import 'package:booking_app/Screens/planning_management.dart';
 import 'package:booking_app/Screens/reserved_devices_screen.dart';
@@ -43,7 +43,7 @@ class MainDrawer extends StatelessWidget {
             CustomListTile(
               onTap: () => Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                      builder: (context) => EmployeeManagementScreen())),
+                      builder: (context) => UsersManagementScreen())),
               title: 'Employees Management',
               leading: Icon(Icons.attractions_outlined),
             ),

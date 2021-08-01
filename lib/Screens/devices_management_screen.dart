@@ -19,6 +19,21 @@ class DevicesManagementScreen extends StatefulWidget {
 class _DevicesManagementScreenState extends State<DevicesManagementScreen> {
   bool _isSearch = false;
   TextEditingController? searchController = TextEditingController();
+
+  Future<void> deleteDevice(
+      MainProvider value, String id, BuildContext context) async {
+    try {
+      await value.deleteDevice(id).then((value) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('The device has been deleted')));
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Occurred error!... try again')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return DoubleBack(
@@ -43,9 +58,6 @@ class _DevicesManagementScreenState extends State<DevicesManagementScreen> {
                         hintStyle: TextStyle(color: Colors.white),
                         hintText: " Search...",
                         border: InputBorder.none,
-                        // errorBorder: InputBorder.none,
-                        //focusedBorder: InputBorder.none,
-                        //enabledBorder: InputBorder.none,
                         contentPadding: EdgeInsets.all(10)),
                     cursorColor: Colors.white,
                     style: TextStyle(color: Colors.white),
@@ -81,8 +93,8 @@ class _DevicesManagementScreenState extends State<DevicesManagementScreen> {
                             : value.allDevicesList[index].id))),
                 child: DeviceItemView(
                     imageUrl: searchController!.text.isNotEmpty
-                        ? value.searchList[index].imageUrl[0]
-                        : value.allDevicesList[index].imageUrl[0],
+                        ? value.searchList[index].imageUrl
+                        :value.allDevicesList[index].imageUrl,
                     name: searchController!.text.isNotEmpty
                         ? value.searchList[index].name
                         : value.allDevicesList[index].name,
@@ -98,7 +110,7 @@ class _DevicesManagementScreenState extends State<DevicesManagementScreen> {
                         context: context,
                         builder: (context) => AlertDialog(
                           title: CustomText(
-                            text: 'Are you sure',
+                            text: 'Are you sure!',
                           ),
                           content: Consumer<MainProvider>(
                             builder: (context, value, child) => Column(
@@ -120,31 +132,19 @@ class _DevicesManagementScreenState extends State<DevicesManagementScreen> {
                                     searchController!.text.isNotEmpty
                                         ? TextButton(
                                             onPressed: () async {
-                                              await value
-                                                  .deleteDevice(value
-                                                      .searchList[index].id)
-                                                  .then((value) {
-                                                Navigator.of(context).pop();
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            'The device has been deleted')));
-                                              });
+                                              deleteDevice(
+                                                  value,
+                                                  value.searchList[index].id,
+                                                  context);
                                             },
                                             child: Text('Yes'))
                                         : TextButton(
-                                            onPressed: () async {
-                                              await value
-                                                  .deleteDevice(value
-                                                      .allDevicesList[index].id)
-                                                  .then((value) {
-                                                Navigator.of(context).pop();
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            'The device has been deleted')));
-                                              });
-                                            },
+                                            onPressed: () async =>
+                                                await deleteDevice(
+                                                    value,
+                                                    value.allDevicesList[index]
+                                                        .id,
+                                                    context),
                                             child: Text('Yes')),
                                   ],
                                 )

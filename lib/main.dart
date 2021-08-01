@@ -34,7 +34,17 @@ class MyApp extends StatelessWidget {
                 theme: ThemeData(
                   primarySwatch: Colors.blue,
                 ),
-                home: BottomNavigationBarScreen(),
+                home: snapshot.connectionState == ConnectionState.waiting
+                    ? SplashScreen()
+                    : valueAuth.isAuth
+                        ? BottomNavigationBarScreen()
+                        : FutureBuilder(
+                            future:  valueAuth.tryAutoLogIn(),
+                            builder: (context, snapshot) =>
+                                snapshot.connectionState ==
+                                        ConnectionState.waiting
+                                    ? SplashScreen()
+                                    : LoginScreen()),
               ),
             ));
   }

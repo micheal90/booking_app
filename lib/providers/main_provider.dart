@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:booking_app/constants.dart';
 import 'package:booking_app/models/category_model.dart';
 import 'package:booking_app/models/device_model.dart';
 import 'package:booking_app/models/employee_model.dart';
 import 'package:booking_app/models/reserve_device_model.dart';
 import 'package:booking_app/sevices/firebase_storage_image.dart';
+import 'package:booking_app/sevices/firestore_reserve_devices.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,102 +15,102 @@ import '../sevices/firestore_device.dart';
 
 class MainProvider with ChangeNotifier {
   List<DeviceModel> allDevicesList = [
-    DeviceModel(
-        id: '1',
-        name: 'Samsung Note 10',
-        model: 'Note 10',
-        os: 'Android Pie',
-        type: 'ANDROID',
-        screenSize: '6 inch',
-        isBooked: true,
-        battery: '5000 mA',
-        imageUrl: [
-          'https://www.mytrendyphone.eu/images/Samsung-Galaxy-Note10-Duos-256GB-Pre-owned-Good-condition-Aura-Black-14042020-01-p.jpg'
-        ]),
-    DeviceModel(
-        id: '2',
-        name: 'Huawei Mate 10',
-        model: 'Mate 10',
-        os: 'Android Marshmelo',
-        type: 'ANDROID',
-        screenSize: '6 inch',
-        isBooked: true,
-        battery: '3330 mA',
-        imageUrl: [
-          'https://images-na.ssl-images-amazon.com/images/I/51uAjhBSzOL._AC_SX522_.jpg'
-        ]),
-    DeviceModel(
-        id: '3',
-        name: 'Samsung A50',
-        model: 'A50',
-        os: 'Android Pie',
-        type: 'ANDROID',
-        isBooked: false,
-        screenSize: '6 inch',
-        imageUrl: [
-          'https://www.mytrendyphone.eu/images/Original-Samsung-Galaxy-A50-Gradation-Cover-EF-AA505CBEGWW-Black-8801643776848-22042019-01-p.jpg'
-        ],
-        battery: '5000 mA'),
-    DeviceModel(
-        id: '4',
-        name: 'Iphone X',
-        model: 'X',
-        os: 'IOS 10',
-        type: 'IOS',
-        isBooked: false,
-        imageUrl: [
-          'https://www.mytrendyphone.eu/images/iPhone-X-XS-Fake-Camera-Sticker-Black-05122019-01-p.jpg',
-          'https://www.tjara.com/wp-content/uploads/2021/04/temp1618662955_1903984948.jpg',
-          'https://cdn.alloallo.media/catalog/product/apple/iphone/iphone-x/iphone-x-space-gray.jpg'
-        ],
-        screenSize: '6 inch',
-        battery: '5000 mA'),
-    DeviceModel(
-        id: '5',
-        name: 'Iphone 9',
-        model: '9',
-        os: 'IOS 9',
-        type: 'IOS',
-        isBooked: false,
-        screenSize: '6 inch',
-        imageUrl: [
-          'https://fdn.gsmarena.com/imgroot/news/20/01/iphone-9-renders/-727/gsmarena_005.jpg'
-        ],
-        battery: '5000 mA'),
-    DeviceModel(
-        id: '6',
-        name: 'HP 110',
-        model: '110',
-        os: 'Windows 10',
-        type: 'PC',
-        isBooked: false,
-        imageUrl: ['https://www.notebookcheck.net/uploads/tx_nbc2/hp110.jpg'],
-        screenSize: '15 inch',
-        battery: '5000 mA'),
-    DeviceModel(
-        id: '7',
-        name: 'Lenovo 120',
-        model: '120',
-        os: 'Windows 10',
-        type: 'PC',
-        isBooked: false,
-        imageUrl: [
-          'https://www.notebookcheck.net/uploads/tx_nbc2/1204810_10.jpg'
-        ],
-        screenSize: '15 inch',
-        battery: '5000 mA'),
-    DeviceModel(
-        id: '8',
-        name: 'Huawei 3G/4G LTE',
-        model: 'E589u',
-        os: 'android',
-        type: 'OTHERS',
-        isBooked: false,
-        imageUrl: [
-          'https://www-konga-com-res.cloudinary.com/w_auto,f_auto,fl_lossy,dpr_auto,q_auto/media/catalog/product/N/a/59917_1516110926.jpg'
-        ],
-        screenSize: '3 inch',
-        battery: '5000 mA'),
+    // DeviceModel(
+    //     id: '1',
+    //     name: 'Samsung Note 10',
+    //     model: 'Note 10',
+    //     os: 'Android Pie',
+    //     type: 'ANDROID',
+    //     screenSize: '6 inch',
+    //     isBooked: true,
+    //     battery: '5000 mA',
+    //     imageUrl: [
+    //       'https://www.mytrendyphone.eu/images/Samsung-Galaxy-Note10-Duos-256GB-Pre-owned-Good-condition-Aura-Black-14042020-01-p.jpg'
+    //     ]),
+    // DeviceModel(
+    //     id: '2',
+    //     name: 'Huawei Mate 10',
+    //     model: 'Mate 10',
+    //     os: 'Android Marshmelo',
+    //     type: 'ANDROID',
+    //     screenSize: '6 inch',
+    //     isBooked: true,
+    //     battery: '3330 mA',
+    //     imageUrl: [
+    //       'https://images-na.ssl-images-amazon.com/images/I/51uAjhBSzOL._AC_SX522_.jpg'
+    //     ]),
+    // DeviceModel(
+    //     id: '3',
+    //     name: 'Samsung A50',
+    //     model: 'A50',
+    //     os: 'Android Pie',
+    //     type: 'ANDROID',
+    //     isBooked: false,
+    //     screenSize: '6 inch',
+    //     imageUrl: [
+    //       'https://www.mytrendyphone.eu/images/Original-Samsung-Galaxy-A50-Gradation-Cover-EF-AA505CBEGWW-Black-8801643776848-22042019-01-p.jpg'
+    //     ],
+    //     battery: '5000 mA'),
+    // DeviceModel(
+    //     id: '4',
+    //     name: 'Iphone X',
+    //     model: 'X',
+    //     os: 'IOS 10',
+    //     type: 'IOS',
+    //     isBooked: false,
+    //     imageUrl: [
+    //       'https://www.mytrendyphone.eu/images/iPhone-X-XS-Fake-Camera-Sticker-Black-05122019-01-p.jpg',
+    //       'https://www.tjara.com/wp-content/uploads/2021/04/temp1618662955_1903984948.jpg',
+    //       'https://cdn.alloallo.media/catalog/product/apple/iphone/iphone-x/iphone-x-space-gray.jpg'
+    //     ],
+    //     screenSize: '6 inch',
+    //     battery: '5000 mA'),
+    // DeviceModel(
+    //     id: '5',
+    //     name: 'Iphone 9',
+    //     model: '9',
+    //     os: 'IOS 9',
+    //     type: 'IOS',
+    //     isBooked: false,
+    //     screenSize: '6 inch',
+    //     imageUrl: [
+    //       'https://fdn.gsmarena.com/imgroot/news/20/01/iphone-9-renders/-727/gsmarena_005.jpg'
+    //     ],
+    //     battery: '5000 mA'),
+    // DeviceModel(
+    //     id: '6',
+    //     name: 'HP 110',
+    //     model: '110',
+    //     os: 'Windows 10',
+    //     type: 'PC',
+    //     isBooked: false,
+    //     imageUrl: ['https://www.notebookcheck.net/uploads/tx_nbc2/hp110.jpg'],
+    //     screenSize: '15 inch',
+    //     battery: '5000 mA'),
+    // DeviceModel(
+    //     id: '7',
+    //     name: 'Lenovo 120',
+    //     model: '120',
+    //     os: 'Windows 10',
+    //     type: 'PC',
+    //     isBooked: false,
+    //     imageUrl: [
+    //       'https://www.notebookcheck.net/uploads/tx_nbc2/1204810_10.jpg'
+    //     ],
+    //     screenSize: '15 inch',
+    //     battery: '5000 mA'),
+    // DeviceModel(
+    // id: '8',
+    // name: 'Huawei 3G/4G LTE',
+    // model: 'E589u',
+    // os: 'android',
+    // type: 'OTHERS',
+    // isBooked: false,
+    // imageUrl: [
+    //   'https://www-konga-com-res.cloudinary.com/w_auto,f_auto,fl_lossy,dpr_auto,q_auto/media/catalog/product/N/a/59917_1516110926.jpg'
+    // ],
+    // screenSize: '3 inch',
+    // battery: '5000 mA'),
   ];
 
   List<CatergoryModel> categories = [
@@ -131,7 +131,6 @@ class MainProvider with ChangeNotifier {
         imageUrl:
             'https://firebasestorage.googleapis.com/v0/b/booking-app-d737d.appspot.com/o/categoriesIcons%2Fothers-96.png?alt=media&token=b95ea046-d22c-46c5-b782-a17303832320'),
   ];
-  List<String> categoryTypeList = ['ANDROID', 'IOS', 'PC', 'OTHERS'];
   List<EmployeeModel> employeeList = [
     EmployeeModel(
         id: '1',
@@ -176,30 +175,15 @@ class MainProvider with ChangeNotifier {
   List<DeviceModel> pcDevicesList = [];
   List<DeviceModel> othersDevicesList = [];
 
-  List<ReserveDeviceModel> reservedDevicesList = [
-    ReserveDeviceModel(
-        id: '1',
-        deviceName: 'Samsung Note 10',
-        userId: '1',
-        type: 'ANDROID',
-        startDate: '01/07/2021',
-        endDate: '20/07/2021'),
-    ReserveDeviceModel(
-        id: '1',
-        deviceName: 'Huawei Mate 10',
-        userId: '2',
-        type: 'ANDROID',
-        startDate: '01/07/2021',
-        endDate: '20/07/2021'),
-  ];
+  List<ReserveDeviceModel> reservedDevicesList = [];
 
   List<File> selectedImages = [];
   String error = 'No Error Detected';
-  String categoryType = 'ANDROID';
   DateTime? startDateTime;
   DateTime? endDateTime;
   ValueNotifier<bool> loading = ValueNotifier(false);
   FirestoreDevice firestoreDevice = FirestoreDevice();
+  FirestorReserveDevices firestorReserveDevices = FirestorReserveDevices();
 
   void changeStartDateTime(DateTime date) {
     startDateTime = date;
@@ -211,13 +195,32 @@ class MainProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void changeType(String type) {
-    categoryType = type;
+  Future getDevices() async {
+    clearAllList();
+    var devices = await firestoreDevice.getDevices();
+    devices.forEach(
+        (device) => allDevicesList.add(DeviceModel.fromMap(device.data())));
+    await getAllReservedDevices();
+    await filterDevices();
     notifyListeners();
   }
 
+  void clearAllList() {
+    allDevicesList = [];
+    androidDevicesList = [];
+    iosDevicesList = [];
+    pcDevicesList = [];
+    reservedDevicesList = [];
+    devicesNotBookedList = [];
+  }
+
+  Future getAllReservedDevices() async {
+    var resDevs = await firestorReserveDevices.getAllreservedDevices();
+    resDevs.forEach(
+        (res) => reservedDevicesList.add(ReserveDeviceModel.fromMap(res.data())));
+  }
+
   Future filterDevices() async {
-    //you must change compare to id
     loading.value = true;
     allDevicesList.forEach((device) {
       //filter devices as booked
@@ -259,8 +262,7 @@ class MainProvider with ChangeNotifier {
       }
     });
     loading.value = false;
-
-    //notifyListeners();
+    notifyListeners();
   }
 
   Future refreshDevices() async {
@@ -272,21 +274,18 @@ class MainProvider with ChangeNotifier {
     return allDevicesList.firstWhere((element) => element.id == id);
   }
 
-  EmployeeModel findEmployeeById(String id) {
-    return employeeList.firstWhere((element) => element.id == id);
-  }
-
-  void removeFromSearchList(String id) {
-    searchList.removeWhere((element) => element.id == id);
-    notifyListeners();
-  }
+  // void removeFromSearchList(String id) {
+  //   searchList.removeWhere((element) => element.id == id);
+  //   notifyListeners();
+  // }
 
   Future addDevice(
-      {String? deviceName,
-      String? modNum,
-      String? os,
-      String? screenSize,
-      String? battery}) async {
+      {required String deviceName,
+      required String modNum,
+      required String os,
+      required String type,
+      required String screenSize,
+      required String battery}) async {
     try {
       //get doc id from firestore to set in deviceId
       var devId = await firestoreDevice.getDocId();
@@ -296,19 +295,22 @@ class MainProvider with ChangeNotifier {
       //set device to database
       await firestoreDevice.addDevice(
           DeviceModel(
-              id: devId,
-              name: deviceName!,
-              model: modNum!,
-              os: os!,
-              type: categoryType,
-              isBooked: false,
-              screenSize: screenSize!,
-              battery: battery!,
-              imageUrl: imageUrls),
+            id: devId,
+            name: deviceName,
+            model: modNum,
+            os: os,
+            type: type,
+            isBooked: false,
+            screenSize: screenSize,
+            battery: battery,
+            imageUrl: imageUrls,
+          ),
           devId);
       // clear lists after add to database
       imageUrls.clear();
       selectedImages.clear();
+      await getDevices();
+      notifyListeners();
     } on FirebaseException catch (e) {
       throw e;
     } catch (e) {
@@ -317,31 +319,42 @@ class MainProvider with ChangeNotifier {
   }
 
   Future updateDevice({
-    id,
-    deviceName,
-    modNum,
-    os,
-    screenSize,
-    battery,
+    required String deviceId,
+    String? deviceName,
+    String? modNum,
+    String? os,
+    String? type,
+    String? screenSize,
+    String? battery,
   }) async {
     try {
       //upload images to firebase storage and get urls
       var imageUrls =
-          await FirebaseStorageImage().uploadFiles(selectedImages, id);
+          await FirebaseStorageImage().uploadFiles(selectedImages, deviceId);
+      //get the rest imageUrl from device and add to new imageUrls
+
+      var device =
+          allDevicesList.firstWhere((element) => element.id == deviceId);
+      if (device.imageUrl.isNotEmpty) {
+        device.imageUrl.forEach((url) {
+          imageUrls.add(url);
+        });
+      }
+      // update new data
       await firestoreDevice.updateDevice(
-          deviceId: id,
+          deviceId: deviceId,
           deviceModel: modNum,
           battery: battery,
           deviceName: deviceName,
           imageUrls: imageUrls,
           os: os,
           screenSize: screenSize,
-          type: categoryType);
-
+          type: type);
+      //refetch all device
+      await getDevices();
       // clear lists after add to database
       imageUrls.clear();
       selectedImages.clear();
-      
     } on FirebaseException catch (e) {
       throw e;
     } catch (e) {
@@ -350,37 +363,25 @@ class MainProvider with ChangeNotifier {
   }
 
   Future deleteDevice(String deviceId) async {
-// must change all this body when link with database
-
-    print('the device is deleted');
-    allDevicesList.removeWhere((element) => element.id == deviceId);
-    androidDevicesList.removeWhere((element) => element.id == deviceId);
-    iosDevicesList.removeWhere((element) => element.id == deviceId);
-    pcDevicesList.removeWhere((element) => element.id == deviceId);
-    othersDevicesList.removeWhere((element) => element.id == deviceId);
-    reservedDevicesList.removeWhere((element) => element.id == deviceId);
-    devicesNotBookedList.removeWhere((element) => element.id == deviceId);
-
+    try {
+      await firestoreDevice.deleteDevice(deviceId);
+    } catch (e) {
+      throw e;
+    }
+    await getDevices();
     notifyListeners();
   }
 
-  Future deleteEmployee(String id) async {
-    print('employee deleted');
-    employeeList.removeWhere((element) => element.id == id);
-    reservedDevicesList.removeWhere((element) => element.id == id);
-    notifyListeners();
-  }
+  // Future addCtegory(String name, String imageUrl) async {
+  //   print('the category is added');
+  //   //add to database
 
-  Future addCtegory(String name, String imageUrl) async {
-    print('the category is added');
-    //add to database
-
-    CatergoryModel catergoryModel =
-        CatergoryModel(name: name, imageUrl: imageUrl);
-    categories.add(catergoryModel);
-    categoryTypeList.add(name.toUpperCase());
-    notifyListeners();
-  }
+  //   CatergoryModel catergoryModel =
+  //       CatergoryModel(name: name, imageUrl: imageUrl);
+  //   categories.add(catergoryModel);
+  //   categoryTypeList.add(name.toUpperCase());
+  //   notifyListeners();
+  // }
 
   Future deleteCategory() async {
     print('the category is deleted');
@@ -391,6 +392,7 @@ class MainProvider with ChangeNotifier {
     //must be update catigories list in database
   }
 
+  //pick image and compressed
   Future pickImages() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
         allowMultiple: true,
@@ -412,14 +414,15 @@ class MainProvider with ChangeNotifier {
     }
   }
 
+  //delete imageUrl localy
   Future deleteImage(int index, String id) async {
     print(index);
     print(id);
     var device = allDevicesList.firstWhere((element) => element.id == id);
     if (device.imageUrl.length > 1) {
-      //device.imageUrl.removeAt(index);
-      //update in database and fetch device
-
+      //remove image localy
+      device.imageUrl.removeAt(index);
+      notifyListeners();
       return 'image has been deleted';
     } else {
       return 'You can not remove all images';

@@ -87,7 +87,7 @@ class _PcDevicesScreenState extends State<PcDevicesScreen> {
                         builder: (_) => DeviceDetailsScreen(
                             deviceId: value.pcDevicesList[index].id))),
                     child: DeviceItemView(
-                        imageUrl: value.pcDevicesList[index].imageUrl[0],
+                        imageUrl: value.pcDevicesList[index].imageUrl,
                         name: value.pcDevicesList[index].name,
                         screenSize: value.pcDevicesList[index].screenSize),
                   ),

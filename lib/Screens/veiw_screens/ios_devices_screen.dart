@@ -84,7 +84,7 @@ class _IosDevicesScreenState extends State<IosDevicesScreen> {
                         builder: (_) => DeviceDetailsScreen(
                             deviceId: value.iosDevicesList[index].id))),
                     child: DeviceItemView(
-                        imageUrl: value.iosDevicesList[index].imageUrl[0],
+                        imageUrl: value.iosDevicesList[index].imageUrl,
                         name: value.iosDevicesList[index].name,
                         screenSize: value.iosDevicesList[index].screenSize),
                   ),

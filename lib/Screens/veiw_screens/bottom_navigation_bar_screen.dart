@@ -1,8 +1,9 @@
+import 'package:booking_app/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:booking_app/Screens/devices_management_screen.dart';
-import 'package:booking_app/Screens/employees_management_screen.dart';
+import 'package:booking_app/Screens/users_management_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/home_screen.dart';
 import 'package:booking_app/providers/main_provider.dart';
 
@@ -20,11 +21,14 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   List<Widget> pages = [
     HomeScreen(),
     DevicesManagementScreen(),
-    EmployeeManagementScreen()
+    UsersManagementScreen()
   ];
   @override
   void initState() {
-    Provider.of<MainProvider>(context, listen: false).filterDevices();
+    Provider.of<MainProvider>(context, listen: false).getDevices();
+    Provider.of<AuthProvider>(context, listen: false).getAdmin();
+    Provider.of<AuthProvider>(context, listen: false).getEmployee();
+
     super.initState();
   }
 
@@ -49,7 +53,7 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.group_outlined),
-            label: 'Emloyees Manage',
+            label: 'Users Manage',
           ),
         ],
       ),

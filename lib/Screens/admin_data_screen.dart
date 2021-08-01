@@ -1,35 +1,33 @@
-import 'package:booking_app/models/employee_model.dart';
+import 'package:booking_app/models/admin_model.dart';
 import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/widgets_model/custom_list_tile_profile.dart';
+import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:booking_app/widgets_model/custom_text.dart';
-
-class EmployeeDataScreen extends StatefulWidget {
-  final String employeeId;
-  EmployeeDataScreen(
-{   required this.employeeId,
-}  );
-
+class AdminDataScreen extends StatefulWidget {
+  const AdminDataScreen({
+    Key? key,
+    required this.adminId,
+  }) : super(key: key);
+  final String adminId;
   @override
-  _EmployeeDataScreenState createState() => _EmployeeDataScreenState();
+  _AdminDataScreenState createState() => _AdminDataScreenState();
 }
 
-class _EmployeeDataScreenState extends State<EmployeeDataScreen> {
-  EmployeeModel? employeeModel;
-
+class _AdminDataScreenState extends State<AdminDataScreen> {
+  AdminModel? adminModel;
   @override
   void initState() {
-    employeeModel = Provider.of<AuthProvider>(context, listen: false)
-        .findEmployeeById(widget.employeeId);
+    adminModel = Provider.of<AuthProvider>(context, listen: false)
+        .findAdminById(widget.adminId);
     super.initState();
   }
 
   void deleteUser(BuildContext context, String id) {
     showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
+        context: context,
+        builder: (context) => AlertDialog(
               title: CustomText(
                 text: 'Are you sure',
               ),
@@ -37,7 +35,7 @@ class _EmployeeDataScreenState extends State<EmployeeDataScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CustomText(
-                    text: 'The Employee will be deleted',
+                    text: 'The Admin will be deleted',
                   ),
                   SizedBox(
                     height: 20,
@@ -49,24 +47,22 @@ class _EmployeeDataScreenState extends State<EmployeeDataScreen> {
                           onPressed: () => Navigator.of(context).pop(),
                           child: Text('No')),
                       TextButton(
-                        onPressed: () async => await deleteEmployee(id),
+                        onPressed: () async => await deleteAdmin(id),
                         child: Text('Yes'),
                       ),
                     ],
                   )
                 ],
               ),
-            )
-    );
+            ));
   }
 
-  deleteEmployee(String id) async {
+  deleteAdmin(String id) async {
     try {
-      await Provider.of<AuthProvider>(context, listen: false)
-          .deleteEmployee(id);
+      await Provider.of<AuthProvider>(context, listen: false).deleteAdmin(id);
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Employee deleted')));
+          .showSnackBar(SnackBar(content: Text('Admin deleted')));
       Navigator.of(context).pop();
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -78,7 +74,7 @@ class _EmployeeDataScreenState extends State<EmployeeDataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Employee Data'),
+        title: Text('Admin Data'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -88,31 +84,21 @@ class _EmployeeDataScreenState extends State<EmployeeDataScreen> {
             CustomListTileProfile(
               leading: Icon(Icons.person),
               title: 'Name',
-              subtitle: employeeModel!.name + ' ' + employeeModel!.lastName,
-            ),
-            CustomListTileProfile(
-              leading: Icon(Icons.group_rounded),
-              title: 'Occupation Group',
-              subtitle: employeeModel!.occupationGroup,
+              subtitle: adminModel!.name + ' ' + adminModel!.lastName,
             ),
             CustomListTileProfile(
               leading: Icon(Icons.email),
               title: 'Email',
-              subtitle: employeeModel!.email,
-            ),
-            CustomListTileProfile(
-              leading: Icon(Icons.phone),
-              title: 'Phone',
-              subtitle: employeeModel!.phone,
+              subtitle: adminModel!.email,
             ),
             SizedBox(
               height: 30,
             ),
             TextButton(
-                onPressed: () => deleteUser(context, employeeModel!.id),
+                onPressed: () => deleteUser(context, adminModel!.id),
                 child: CustomText(
                   alignment: Alignment.center,
-                  text: 'Delete Employee',
+                  text: 'Delete Admin',
                   color: Colors.red,
                 ))
           ]),

@@ -8,6 +8,16 @@ class FirestoreUsers {
   CollectionReference employeeCollectionRef =
       FirebaseFirestore.instance.collection('employee');
 
+  Future getAdmins() async {
+    var admins = await adminCollectionRef.get();
+    return admins.docs;
+  }
+
+  Future getEmployees() async {
+    var emps = await employeeCollectionRef.get();
+    return emps.docs;
+  }
+
   Future addAdminData(AdminModel adminModel) async {
     await adminCollectionRef.doc(adminModel.id).set(adminModel.toMap());
   }
@@ -18,7 +28,7 @@ class FirestoreUsers {
         .set(employeeModel.toMap());
   }
 
-  Future getadminData(String adminId) async {
+  Future getAdminData(String adminId) async {
     var value = await adminCollectionRef.doc(adminId).get();
     return value;
   }
@@ -29,7 +39,7 @@ class FirestoreUsers {
 
   Future deleteEmployee(String employeeId) async {
     await employeeCollectionRef.doc(employeeId).delete();
-  }
+      }
 
   Future updateAdmin(AdminModel adminModel) async {
     await adminCollectionRef.doc(adminModel.id).update(adminModel.toMap());
@@ -40,4 +50,5 @@ class FirestoreUsers {
         .doc(employeeModel.id)
         .update(employeeModel.toMap());
   }
+ 
 }

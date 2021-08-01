@@ -1,8 +1,9 @@
+import 'package:booking_app/constants.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class DeviceItemView extends StatelessWidget {
- final  String imageUrl;
+ final  List<String> imageUrl;
  final String name;
  final String screenSize;
  final Widget? trailing;
@@ -26,7 +27,7 @@ class DeviceItemView extends StatelessWidget {
           child: FadeInImage(
             placeholder: AssetImage('assets/images/loading.png'),
             image: NetworkImage(
-              imageUrl,
+              imageUrl.isNotEmpty?imageUrl.first:notImageAvailableUrl,
             ),
             imageErrorBuilder: (context, error, stackTrace) =>
                 new Icon(Icons.error_outline_outlined),

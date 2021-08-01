@@ -1,14 +1,43 @@
-import 'package:booking_app/Screens/veiw_screens/home_screen.dart';
+import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/widgets_model/custom_elevated_button.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
- final  TextEditingController _emailController = TextEditingController();
- final GlobalKey<FormState> _formKey = GlobalKey();
+class ForgotPasswordScreen extends StatefulWidget {
+  @override
+  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  bool isLoading = false;
+
+  void resetPassword(BuildContext context) async {
+    FocusScope.of(context).unfocus();
+    if (!_formKey.currentState!.validate()) return;
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      await Provider.of<AuthProvider>(context, listen: false)
+          .resetPassword(_emailController.text.trim());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Check your email inbox..')));
+      Navigator.of(context).pop();
+    } catch (e) {
+      print(e.toString());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +86,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                             height: 40,
                           ),
                           CustomText(
-                            text:
-                                'Enter your email address below to reset password ',
+                            text: 'Enter your email address',
                             color: Colors.grey,
                             alignment: Alignment.center,
                             fontSize: 22,
@@ -68,39 +96,34 @@ class ForgotPasswordScreen extends StatelessWidget {
                             height: 20,
                           ),
                           CustomTextFormField(
-                              controller: _emailController,
-                              label: 'Email',
-                              hint: 'example@gmail.com',
-                              isPassword: false,
-                              prefixIcon: Icons.email,
-                              suffixIcon: null,
-                              type: TextInputType.emailAddress,
-                              validate: (String? val) {
-                                if (val!.isEmpty || !val.contains('@')) {
-                                  return "Enter a valid email";
-                                }
-                                return null;
-                              },
-                              onSave: (value) {
-                                print('Email: $value');
-                              }),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          CustomElevatedButton(
-                            text: 'RESET PASSWORD',
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeScreen()));
+                            controller: _emailController,
+                            label: 'Email',
+                            hint: 'example@gmail.com',
+                            isPassword: false,
+                            prefixIcon: Icons.email,
+                            suffixIcon: null,
+                            type: TextInputType.emailAddress,
+                            validate: (String? val) {
+                              if (val!.isEmpty || !val.contains('@')) {
+                                return "Enter a valid email";
                               }
+                              return null;
                             },
-                          )
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          isLoading
+                              ? CircularProgressIndicator()
+                              : CustomElevatedButton(
+                                  text: 'RESET PASSWORD',
+                                  onPressed: () {
+                                    resetPassword(context);
+                                  },
+                                )
                         ],
                       ),
                     ),

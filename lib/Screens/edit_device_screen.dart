@@ -23,19 +23,16 @@ class EditDeviceScreen extends StatefulWidget {
 
 class _EditDeviceScreenState extends State<EditDeviceScreen> {
   bool isLoading = false;
-
   TextEditingController? nameController = TextEditingController();
-
   TextEditingController? modelController = TextEditingController();
-
   TextEditingController? osController = TextEditingController();
-
   TextEditingController? screenSizeController = TextEditingController();
-
   TextEditingController? batteryController = TextEditingController();
-
   GlobalKey<FormState> _formKey = GlobalKey();
   DeviceModel? deviceModel;
+  List<String> categoryTypeList = ['ANDROID', 'IOS', 'PC', 'OTHERS'];
+  String categoryType = '';
+
   @override
   void initState() {
     deviceModel = Provider.of<MainProvider>(context, listen: false)
@@ -45,29 +42,35 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
     osController!.text = deviceModel!.os;
     screenSizeController!.text = deviceModel!.screenSize;
     batteryController!.text = deviceModel!.battery;
-
+    categoryType = deviceModel!.type;
     super.initState();
   }
 
-  void update(BuildContext context, MainProvider value) {
+  void changeType(String type) {
+    setState(() {
+      categoryType = type;
+    });
+  }
+
+  void update(BuildContext context, MainProvider value) async {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
     setState(() {
       isLoading = true;
     });
     try {
-      value
-          .updateDevice(
-              deviceName: nameController!.text.trim(),
-              modNum: modelController!.text.trim(),
-              os: osController!.text.trim(),
-              screenSize: screenSizeController!.text.trim(),
-              battery: batteryController!.text.trim())
-          .then((value) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Device updated')));
-      });
+      await value.updateDevice(
+        deviceId: deviceModel!.id,
+        deviceName: nameController!.text.trim(),
+        modNum: modelController!.text.trim(),
+        os: osController!.text.trim(),
+        type: categoryType,
+        screenSize: screenSizeController!.text.trim(),
+        battery: batteryController!.text.trim(),
+      );
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Device updated')));
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
@@ -83,12 +86,32 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
     });
   }
 
+  Future<void> deleteDevice(MainProvider value, BuildContext context) async {
+    try {
+      await value.deleteDevice(deviceModel!.id).then((value) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('The device has been deleted')));
+      }).then((value) => Navigator.of(context).pop());
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Occurred error!... try again')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Device"),
         centerTitle: true,
+        leading: IconButton(
+            onPressed: () async {
+              await Provider.of<MainProvider>(context, listen: false)
+                  .getDevices();
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -98,7 +121,7 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
                     context: context,
                     builder: (context) => AlertDialog(
                       title: CustomText(
-                        text: 'Are you sure',
+                        text: 'Are you sure!',
                       ),
                       content: Consumer<MainProvider>(
                         builder: (context, value, child) => Column(
@@ -118,18 +141,8 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
                                         Navigator.of(context).pop(),
                                     child: Text('No')),
                                 TextButton(
-                                    onPressed: () async {
-                                      await value
-                                          .deleteDevice(deviceModel!.id)
-                                          .then((value) {
-                                        Navigator.of(context).pop();
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    'The device has been deleted')));
-                                      }).then((value) =>
-                                              Navigator.of(context).pop());
-                                    },
+                                    onPressed: () async =>
+                                        await deleteDevice(value, context),
                                     child: Text('Yes')),
                               ],
                             )
@@ -199,16 +212,16 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
                     text: 'Select the type:',
                   ),
                   DropdownButton<String>(
-                    value: deviceModel!.type,
+                    value: categoryType,
                     icon: const Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
                     style: const TextStyle(color: KPrimaryColor, fontSize: 18),
                     underline: Container(height: 2, color: Colors.black45),
                     onChanged: (String? newValue) {
-                      valueMain.changeType(newValue!);
+                      changeType(newValue!);
                     },
-                    items: valueMain.categoryTypeList
+                    items: categoryTypeList
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

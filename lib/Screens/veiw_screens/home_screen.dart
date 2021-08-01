@@ -1,4 +1,3 @@
-
 import 'package:booking_app/Screens/categories_mangement.dart';
 import 'package:booking_app/Screens/veiw_screens/device_details_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/android_devices_screen.dart';
@@ -25,6 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isSearch = false;
   TextEditingController? searchController = TextEditingController();
   //List<DeviceModel> searchList = [];
+  // @override
+  // void initState() {
+  //   Provider.of<MainProvider>(context,listen: false).getDevices();
+  //   super.initState();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return DoubleBack(
@@ -75,7 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(children: [
+            child: ListView(
+              children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -123,44 +129,48 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(
                 height: 15,
               ),
-              Expanded(
-                child: Consumer<MainProvider>(
-                  builder: (context, value, child) => GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1,
-                        crossAxisSpacing: 10,
-                        //mainAxisExtent: 200,
-                        mainAxisSpacing: 10),
-                    itemBuilder: (context, index) => searchController!
-                            .text.isNotEmpty
-                        ? GestureDetector(
-                            onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (_) => DeviceDetailsScreen(
-                                        deviceId: value.searchList[index].id))),
-                            child: DeviceItemView(
-                                imageUrl: value.searchList[index].imageUrl[0],
-                                name: value.searchList[index].name,
-                                screenSize: value.searchList[index].screenSize),
-                          )
-                        : GestureDetector(
-                            onTap: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (_) => DeviceDetailsScreen(
-                                        deviceId: value
-                                            .devicesNotBookedList[index].id))),
-                            child: DeviceItemView(
-                                imageUrl: value
-                                    .devicesNotBookedList[index].imageUrl[0],
-                                name: value.devicesNotBookedList[index].name,
-                                screenSize: value
-                                    .devicesNotBookedList[index].screenSize),
-                          ),
-                    itemCount: searchController!.text.isNotEmpty
-                        ? value.searchList.length
-                        : value.devicesNotBookedList.length,
-                  ),
+              Consumer<MainProvider>(
+                builder: (context, valueMain, child) => GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1,
+                      crossAxisSpacing: 10,
+                      //mainAxisExtent: 200,
+                      mainAxisSpacing: 10),
+                  itemBuilder: (context, index) => searchController!
+                          .text.isNotEmpty
+                      ? GestureDetector(
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (_) => DeviceDetailsScreen(
+                                      deviceId:
+                                          valueMain.searchList[index].id))),
+                          child: DeviceItemView(
+                              imageUrl:
+                                  valueMain.searchList[index].imageUrl[0],
+                              name: valueMain.searchList[index].name,
+                              screenSize:
+                                  valueMain.searchList[index].screenSize),
+                        )
+                      : GestureDetector(
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (_) => DeviceDetailsScreen(
+                                      deviceId: valueMain
+                                          .devicesNotBookedList[index].id))),
+                          child: DeviceItemView(
+                              imageUrl: valueMain
+                                  .devicesNotBookedList[index].imageUrl,
+                              name:
+                                  valueMain.devicesNotBookedList[index].name,
+                              screenSize: valueMain
+                                  .devicesNotBookedList[index].screenSize),
+                        ),
+                  itemCount: searchController!.text.isNotEmpty
+                      ? valueMain.searchList.length
+                      : valueMain.devicesNotBookedList.length,
                 ),
               )
             ])),

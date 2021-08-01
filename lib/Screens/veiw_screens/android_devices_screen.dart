@@ -84,7 +84,7 @@ class _AndroidDevicesScreenState extends State<AndroidDevicesScreen> {
                         builder: (_) => DeviceDetailsScreen(
                             deviceId: value.androidDevicesList[index].id))),
                     child: DeviceItemView(
-                        imageUrl: value.androidDevicesList[index].imageUrl[0],
+                        imageUrl: value.androidDevicesList[index].imageUrl,
                         name: value.androidDevicesList[index].name,
                         screenSize: value.androidDevicesList[index].screenSize),
                   ),
