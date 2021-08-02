@@ -98,9 +98,9 @@ class _DevicesManagementScreenState extends State<DevicesManagementScreen> {
                     name: searchController!.text.isNotEmpty
                         ? value.searchList[index].name
                         : value.allDevicesList[index].name,
-                    screenSize: searchController!.text.isNotEmpty
-                        ? value.searchList[index].screenSize
-                        : value.allDevicesList[index].screenSize,
+                    model: searchController!.text.isNotEmpty
+                        ? value.searchList[index].model
+                        : value.allDevicesList[index].model,
                     trailing: IconButton(
                       icon: Icon(
                         Icons.delete,

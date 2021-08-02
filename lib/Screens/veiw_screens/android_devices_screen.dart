@@ -75,9 +75,9 @@ class _AndroidDevicesScreenState extends State<AndroidDevicesScreen> {
                         builder: (_) => DeviceDetailsScreen(
                             deviceId: value.searchList[index].id))),
                     child: DeviceItemView(
-                        imageUrl: value.searchList[index].imageUrl[0],
+                        imageUrl: value.searchList[index].imageUrl,
                         name: value.searchList[index].name,
-                        screenSize: value.searchList[index].screenSize),
+                        model: value.searchList[index].model),
                   )
                 : GestureDetector(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -86,7 +86,7 @@ class _AndroidDevicesScreenState extends State<AndroidDevicesScreen> {
                     child: DeviceItemView(
                         imageUrl: value.androidDevicesList[index].imageUrl,
                         name: value.androidDevicesList[index].name,
-                        screenSize: value.androidDevicesList[index].screenSize),
+                        model: value.androidDevicesList[index].model),
                   ),
             itemCount: searchController!.text.isNotEmpty
                 ? value.searchList.length

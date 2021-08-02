@@ -78,9 +78,9 @@ class _PcDevicesScreenState extends State<PcDevicesScreen> {
                         builder: (_) => DeviceDetailsScreen(
                             deviceId: value.searchList[index].id))),
                     child: DeviceItemView(
-                        imageUrl: value.searchList[index].imageUrl[0],
+                        imageUrl: value.searchList[index].imageUrl,
                         name: value.searchList[index].name,
-                        screenSize: value.searchList[index].screenSize),
+                        model: value.searchList[index].model),
                   )
                 : GestureDetector(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -89,7 +89,7 @@ class _PcDevicesScreenState extends State<PcDevicesScreen> {
                     child: DeviceItemView(
                         imageUrl: value.pcDevicesList[index].imageUrl,
                         name: value.pcDevicesList[index].name,
-                        screenSize: value.pcDevicesList[index].screenSize),
+                        model: value.pcDevicesList[index].model),
                   ),
             itemCount: searchController!.text.isNotEmpty
                 ? value.searchList.length

@@ -28,6 +28,8 @@ class FirestoreUsers {
         .set(employeeModel.toMap());
   }
 
+  
+
   Future getAdminData(String adminId) async {
     var value = await adminCollectionRef.doc(adminId).get();
     return value;
@@ -39,7 +41,7 @@ class FirestoreUsers {
 
   Future deleteEmployee(String employeeId) async {
     await employeeCollectionRef.doc(employeeId).delete();
-      }
+  }
 
   Future updateAdmin(AdminModel adminModel) async {
     await adminCollectionRef.doc(adminModel.id).update(adminModel.toMap());
@@ -50,5 +52,4 @@ class FirestoreUsers {
         .doc(employeeModel.id)
         .update(employeeModel.toMap());
   }
- 
 }

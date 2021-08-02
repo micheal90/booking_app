@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 class DeviceItemView extends StatelessWidget {
  final  List<String> imageUrl;
  final String name;
- final String screenSize;
+ final String model;
  final Widget? trailing;
 
   const DeviceItemView(
       {Key? key,
       required this.imageUrl,
       required this.name,
-      required this.screenSize,
+      required this.model,
       this.trailing,
       
       })
@@ -41,7 +41,7 @@ class DeviceItemView extends StatelessWidget {
             ),
             subtitle: CustomText(
               color: Colors.white,
-              text: screenSize,
+              text: model,
             ),
             trailing:trailing ,
           ),

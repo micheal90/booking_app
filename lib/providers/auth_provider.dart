@@ -167,6 +167,18 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future updateAdmin() async {
+    isLoading.value = true;
+    try {
+      await firestoreUsers.updateAdmin(adminModel!);
+      await getUserData(adminModel!.id);
+    } catch (e) {
+      throw e;
+    }
+    isLoading.value = false;
+    notifyListeners();
+  }
+
   Future deleteEmployee(String employeeId) async {
     try {
       await firestoreUsers.deleteEmployee(employeeId);

@@ -169,19 +169,19 @@ class MainProvider with ChangeNotifier {
   ];
   List<dynamic> searchList = [];
   List<DeviceModel> devicesNotBookedList = [];
-
   List<DeviceModel> androidDevicesList = [];
   List<DeviceModel> iosDevicesList = [];
   List<DeviceModel> pcDevicesList = [];
   List<DeviceModel> othersDevicesList = [];
-
   List<ReserveDeviceModel> reservedDevicesList = [];
+  List<ReserveDeviceModel> orderResvDevicesList = [];
 
   List<File> selectedImages = [];
-  String error = 'No Error Detected';
+
   DateTime? startDateTime;
   DateTime? endDateTime;
-  ValueNotifier<bool> loading = ValueNotifier(false);
+  ValueNotifier<bool> isLoading = ValueNotifier(false);
+  ValueNotifier<bool> isSearch = ValueNotifier(false);
   FirestoreDevice firestoreDevice = FirestoreDevice();
   FirestorReserveDevices firestorReserveDevices = FirestorReserveDevices();
 
@@ -196,12 +196,21 @@ class MainProvider with ChangeNotifier {
   }
 
   Future getDevices() async {
+    isLoading.value = true;
     clearAllList();
     var devices = await firestoreDevice.getDevices();
     devices.forEach(
         (device) => allDevicesList.add(DeviceModel.fromMap(device.data())));
     await getAllReservedDevices();
+    await getAllorderReservDevices();
     await filterDevices();
+    isLoading.value = false;
+    notifyListeners();
+  }
+
+  Future refresh() async {
+    await getDevices();
+    print('ref');
     notifyListeners();
   }
 
@@ -211,17 +220,24 @@ class MainProvider with ChangeNotifier {
     iosDevicesList = [];
     pcDevicesList = [];
     reservedDevicesList = [];
+    orderResvDevicesList = [];
     devicesNotBookedList = [];
   }
 
   Future getAllReservedDevices() async {
     var resDevs = await firestorReserveDevices.getAllreservedDevices();
-    resDevs.forEach(
-        (res) => reservedDevicesList.add(ReserveDeviceModel.fromMap(res.data())));
+    resDevs.forEach((device) =>
+        reservedDevicesList.add(ReserveDeviceModel.fromMap(device.data())));
+  }
+
+  Future getAllorderReservDevices() async {
+    var orders = await firestorReserveDevices.getAllOrder();
+    orders.forEach((order) =>
+        orderResvDevicesList.add(ReserveDeviceModel.fromMap(order.data())));
   }
 
   Future filterDevices() async {
-    loading.value = true;
+    isLoading.value = true;
     allDevicesList.forEach((device) {
       //filter devices as booked
       if (device.isBooked == false) {
@@ -261,12 +277,7 @@ class MainProvider with ChangeNotifier {
         }
       }
     });
-    loading.value = false;
-    notifyListeners();
-  }
-
-  Future refreshDevices() async {
-    await filterDevices();
+    isLoading.value = false;
     notifyListeners();
   }
 
@@ -278,6 +289,17 @@ class MainProvider with ChangeNotifier {
   //   searchList.removeWhere((element) => element.id == id);
   //   notifyListeners();
   // }
+  void changeIsSearch() {
+    isSearch.value = !isSearch.value;
+    notifyListeners();
+  }
+  void searchFunction(String val, List list) {
+    searchList = list
+        .where(
+            (element) => element.name.toLowerCase().contains(val.toLowerCase()))
+        .toList();
+    notifyListeners();
+  }
 
   Future addDevice(
       {required String deviceName,

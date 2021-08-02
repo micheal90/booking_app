@@ -1,10 +1,8 @@
-import 'package:booking_app/Screens/categories_mangement.dart';
 import 'package:booking_app/Screens/veiw_screens/device_details_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/android_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/ios_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/others_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/pc_devices_screen.dart';
-import 'package:booking_app/constants.dart';
 
 import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
@@ -23,26 +21,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _isSearch = false;
   TextEditingController? searchController = TextEditingController();
-  //List<DeviceModel> searchList = [];
-  // @override
-  // void initState() {
-  //   Provider.of<MainProvider>(context,listen: false).getDevices();
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
     return DoubleBack(
-      child: Scaffold(
-        appBar: AppBar(
-          title: _isSearch
-              ? Consumer<MainProvider>(
-                  builder: (context, value, child) => TextField(
+      child: Consumer<MainProvider>(
+        builder: (context, valueMain, child) => Scaffold(
+          appBar: AppBar(
+            title: _isSearch
+                ? TextField(
                     autofocus: true,
                     controller: searchController,
                     onChanged: (val) {
                       setState(() {
-                        value.searchList = value.devicesNotBookedList
+                        valueMain.searchList = valueMain.devicesNotBookedList
                             .where((element) => element.name
                                 .toLowerCase()
                                 .contains(val.toLowerCase()))
@@ -59,163 +51,155 @@ class _HomeScreenState extends State<HomeScreen> {
                         contentPadding: EdgeInsets.all(10)),
                     cursorColor: Colors.white,
                     style: TextStyle(color: Colors.white),
+                  )
+                : Text("Booking App"),
+            actions: [
+              IconButton(
+                  icon: _isSearch
+                      ? Icon(Icons.cancel_outlined)
+                      : Icon(Icons.search),
+                  onPressed: () {
+                    setState(() {
+                      _isSearch = !_isSearch;
+                      searchController!.clear();
+                    });
+                    valueMain.searchList = [];
+                  })
+            ],
+            centerTitle: true,
+          ),
+          body: RefreshIndicator(
+            onRefresh: () async => await valueMain.refresh(),
+            child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomText(
+                        text: 'Categories',
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      // GestureDetector(
+                      //   onTap: () =>
+                      //       Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      //     builder: (context) => CategoriesManagementScreen(),
+                      //   )),
+                      //   child: Padding(
+                      //     padding: const EdgeInsets.symmetric(horizontal: 5),
+                      //     child: CustomText(
+                      //       text: 'Edit',
+                      //       color: KPrimaryColor,
+                      //       fontSize: 18,
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
                   ),
-                )
-              : Text("Booking App"),
-          actions: [
-            IconButton(
-                icon: _isSearch
-                    ? Icon(Icons.cancel_outlined)
-                    : Icon(Icons.search),
-                onPressed: () {
-                  setState(() {
-                    _isSearch = !_isSearch;
-                    searchController!.clear();
-                  });
-                  Provider.of<MainProvider>(context, listen: false).searchList =
-                      [];
-                })
-          ],
-          centerTitle: true,
-        ),
-        body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView(
-              children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                  SizedBox(
+                    height: 15,
+                  ),
+                  buildRowCategories(context, valueMain),
+                  // SizedBox(
+                  //   height: 15,
+                  // ),
                   CustomText(
-                    text: 'Categories',
+                    text: 'Recent Add',
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
-                  GestureDetector(
-                    onTap: () =>
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => CategoriesManagementScreen(),
-                    )),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: CustomText(
-                        text: 'Edit',
-                        color: KPrimaryColor,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              Container(
-                height: 80,
-                width: MediaQuery.of(context).size.width,
-                child: Consumer<MainProvider>(
-                  builder: (context, value, child) =>
-                      buildRowCategories(context, value),
-                ),
-              ),
-              // SizedBox(
-              //   height: 15,
-              // ),
-              CustomText(
-                text: 'Recent Add',
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
 
-              SizedBox(
-                height: 15,
-              ),
-              Consumer<MainProvider>(
-                builder: (context, valueMain, child) => GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1,
-                      crossAxisSpacing: 10,
-                      //mainAxisExtent: 200,
-                      mainAxisSpacing: 10),
-                  itemBuilder: (context, index) => searchController!
-                          .text.isNotEmpty
-                      ? GestureDetector(
-                          onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (_) => DeviceDetailsScreen(
-                                      deviceId:
-                                          valueMain.searchList[index].id))),
-                          child: DeviceItemView(
-                              imageUrl:
-                                  valueMain.searchList[index].imageUrl[0],
-                              name: valueMain.searchList[index].name,
-                              screenSize:
-                                  valueMain.searchList[index].screenSize),
-                        )
-                      : GestureDetector(
-                          onTap: () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (_) => DeviceDetailsScreen(
-                                      deviceId: valueMain
-                                          .devicesNotBookedList[index].id))),
-                          child: DeviceItemView(
-                              imageUrl: valueMain
-                                  .devicesNotBookedList[index].imageUrl,
-                              name:
-                                  valueMain.devicesNotBookedList[index].name,
-                              screenSize: valueMain
-                                  .devicesNotBookedList[index].screenSize),
-                        ),
-                  itemCount: searchController!.text.isNotEmpty
-                      ? valueMain.searchList.length
-                      : valueMain.devicesNotBookedList.length,
-                ),
-              )
-            ])),
-        drawer: MainDrawer(),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  valueMain.isLoading.value
+                      ? Center(child: CircularProgressIndicator())
+                      : buildGridDevices(valueMain)
+                ])),
+          ),
+          drawer: MainDrawer(),
+        ),
       ),
     );
   }
 
-  Row buildRowCategories(BuildContext context, MainProvider value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        GestureDetector(
-          onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => AndroidDevicesScreen())),
-          child: CategoryWidget(
-            text: value.categories[0].name,
-            imageUrl: value.categories[0].imageUrl,
+  Container buildRowCategories(BuildContext context, MainProvider valueMain) {
+    return Container(
+      height: 80,
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AndroidDevicesScreen())),
+            child: CategoryWidget(
+              text: valueMain.categories[0].name,
+              imageUrl: valueMain.categories[0].imageUrl,
+            ),
           ),
-        ),
-        GestureDetector(
-          onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => IosDevicesScreen())),
-          child: CategoryWidget(
-            text: value.categories[1].name,
-            imageUrl: value.categories[1].imageUrl,
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => IosDevicesScreen())),
+            child: CategoryWidget(
+              text: valueMain.categories[1].name,
+              imageUrl: valueMain.categories[1].imageUrl,
+            ),
           ),
-        ),
-        GestureDetector(
-          onTap: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => PcDevicesScreen())),
-          child: CategoryWidget(
-            text: value.categories[2].name,
-            imageUrl: value.categories[2].imageUrl,
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => PcDevicesScreen())),
+            child: CategoryWidget(
+              text: valueMain.categories[2].name,
+              imageUrl: valueMain.categories[2].imageUrl,
+            ),
           ),
-        ),
-        GestureDetector(
-          onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => OthersDevicesScreen())),
-          child: CategoryWidget(
-            text: value.categories[3].name,
-            imageUrl: value.categories[3].imageUrl,
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => OthersDevicesScreen())),
+            child: CategoryWidget(
+              text: valueMain.categories[3].name,
+              imageUrl: valueMain.categories[3].imageUrl,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  Widget buildGridDevices(MainProvider valueMain) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 1,
+          crossAxisSpacing: 10,
+          //mainAxisExtent: 200,
+          mainAxisSpacing: 10),
+      itemBuilder: (context, index) => searchController!.text.isNotEmpty
+          ? GestureDetector(
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => DeviceDetailsScreen(
+                      deviceId: valueMain.searchList[index].id))),
+              child: DeviceItemView(
+                  imageUrl: valueMain.searchList[index].imageUrl,
+                  name: valueMain.searchList[index].name,
+                  model: valueMain.searchList[index].model),
+            )
+          : GestureDetector(
+              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => DeviceDetailsScreen(
+                      deviceId: valueMain.devicesNotBookedList[index].id))),
+              child: DeviceItemView(
+                  imageUrl: valueMain.devicesNotBookedList[index].imageUrl,
+                  name: valueMain.devicesNotBookedList[index].name,
+                  model: valueMain.devicesNotBookedList[index].model),
+            ),
+      itemCount: searchController!.text.isNotEmpty
+          ? valueMain.searchList.length
+          : valueMain.devicesNotBookedList.length,
     );
   }
 
