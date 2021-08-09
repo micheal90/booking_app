@@ -9,6 +9,7 @@ class FirestoreDevice {
     var value = await _deviceCollectionRef.get();
     return value.docs;
   }
+
   //used when add new device
   Future<String> getDocId() async {
     return _deviceCollectionRef.doc().id;
@@ -21,18 +22,20 @@ class FirestoreDevice {
   Future updateDevice(
       {String? deviceId,
       String? deviceName,
-      String? deviceModel,
+      String? model,
       String? type,
       String? os,
+      bool? isBooked,
       String? screenSize,
       String? battery,
       List<String>? imageUrls}) async {
     await _deviceCollectionRef.doc(deviceId).update({
       'id': deviceId,
       'name': deviceName,
-      'model': deviceModel,
+      'model': model,
       'os': os,
       'type': type,
+      'isBooked': isBooked,
       'screenSize': screenSize,
       'battery': battery,
       'imageUrl': imageUrls,

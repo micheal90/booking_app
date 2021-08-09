@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:booking_app/models/category_model.dart';
 import 'package:booking_app/models/device_model.dart';
-import 'package:booking_app/models/employee_model.dart';
 import 'package:booking_app/models/reserve_device_model.dart';
 import 'package:booking_app/sevices/firebase_storage_image.dart';
 import 'package:booking_app/sevices/firestore_reserve_devices.dart';
@@ -131,42 +130,7 @@ class MainProvider with ChangeNotifier {
         imageUrl:
             'https://firebasestorage.googleapis.com/v0/b/booking-app-d737d.appspot.com/o/categoriesIcons%2Fothers-96.png?alt=media&token=b95ea046-d22c-46c5-b782-a17303832320'),
   ];
-  List<EmployeeModel> employeeList = [
-    EmployeeModel(
-        id: '1',
-        name: 'Micheal',
-        lastName: 'Hana',
-        occupationGroup: 'IT department',
-        email: 'michealhana@gmail.com',
-        imageUrl:
-            'https://previews.123rf.com/images/yupiramos/yupiramos1607/yupiramos160710209/60039275-young-male-cartoon-profile-vector-illustration-graphic-design-.jpg',
-        phone: '+96181488287'),
-    EmployeeModel(
-        id: '2',
-        name: 'Amal',
-        lastName: 'Barka',
-        occupationGroup: 'HR department',
-        email: 'amalbarka@gmail.com',
-        imageUrl: '',
-        phone: '+96181488287'),
-    EmployeeModel(
-        id: '3',
-        name: 'georges',
-        lastName: 'mousa',
-        occupationGroup: 'IT department',
-        email: 'georges@gmail.com',
-        imageUrl: '',
-        phone: '+96181488287'),
-    EmployeeModel(
-        id: '4',
-        name: 'dani',
-        lastName: 'dodo',
-        occupationGroup: 'IT department',
-        email: 'dani@gmail.com',
-        imageUrl:
-            'https://previews.123rf.com/images/yupiramos/yupiramos1607/yupiramos160710209/60039275-young-male-cartoon-profile-vector-illustration-graphic-design-.jpg',
-        phone: '+96181488287'),
-  ];
+
   List<dynamic> searchList = [];
   List<DeviceModel> devicesNotBookedList = [];
   List<DeviceModel> androidDevicesList = [];
@@ -185,31 +149,35 @@ class MainProvider with ChangeNotifier {
   FirestoreDevice firestoreDevice = FirestoreDevice();
   FirestorReserveDevices firestorReserveDevices = FirestorReserveDevices();
 
-  void changeStartDateTime(DateTime date) {
-    startDateTime = date;
-    notifyListeners();
-  }
-
-  void changeEndDateTime(DateTime date) {
-    endDateTime = date;
-    notifyListeners();
-  }
-
-  Future getDevices() async {
+  Future fetchDataAndCheckDate() async {
     isLoading.value = true;
-    clearAllList();
-    var devices = await firestoreDevice.getDevices();
-    devices.forEach(
-        (device) => allDevicesList.add(DeviceModel.fromMap(device.data())));
-    await getAllReservedDevices();
-    await getAllorderReservDevices();
-    await filterDevices();
+    await getAllDevices();
+    await checkStartReserveDate();
+    await checkEndReserveDate();
+    await fetchDataAfterCheck();
     isLoading.value = false;
     notifyListeners();
   }
 
+  Future fetchDataAfterCheck() async {
+    await getAllDevices();
+    isLoading.value = true;
+    await getAllReservedDevices();
+    await getAllorderReservDevices();
+    await filterDevices();
+  }
+
+  Future getAllDevices() async {
+    clearAllList();
+    var devices = await firestoreDevice.getDevices();
+    devices.forEach(
+        (device) => allDevicesList.add(DeviceModel.fromMap(device.data())));
+    print('alldevice: ${allDevicesList.length}');
+    notifyListeners();
+  }
+
   Future refresh() async {
-    await getDevices();
+    await fetchDataAndCheckDate();
     print('ref');
     notifyListeners();
   }
@@ -234,6 +202,106 @@ class MainProvider with ChangeNotifier {
     var orders = await firestorReserveDevices.getAllOrder();
     orders.forEach((order) =>
         orderResvDevicesList.add(ReserveDeviceModel.fromMap(order.data())));
+  }
+
+  Future checkStartReserveDate() async {
+    //get all orders from database
+    var allOrdersReserved = await firestorReserveDevices.getAllOrder();
+    var checkList = [];
+    print('order length: ${allOrdersReserved.length}');
+    // check if allOrdersReserved is empty
+    if (allOrdersReserved.isEmpty) return;
+    //loop in allOrdersReserved and save in checkList
+    allOrdersReserved.forEach((element) {
+      checkList.add(ReserveDeviceModel.fromMap(element.data()));
+    });
+    print('checkList length:${checkList.length}');
+
+    //check orders in checkList if date now is after start time
+    checkList.forEach((order) async {
+      //get start an end time for check
+      var start = DateTime.parse(order.startDate);
+      var end = DateTime.parse(order.endDate);
+
+      if (DateTime.now().isAfter(start) && DateTime.now().isBefore(end)) {
+        print(DateTime.now().isAfter(start) && DateTime.now().isBefore(end));
+        // add reserve device to database
+        await firestorReserveDevices.addReserveDevice(order);
+
+        //change key isBooked to true in device and update device
+        DeviceModel deviceModel = findDeviceById(order.id);
+
+        await firestoreDevice.updateDevice(
+          deviceId: deviceModel.id,
+          isBooked: true,
+          battery: deviceModel.battery,
+          model: deviceModel.model,
+          deviceName: deviceModel.name,
+          imageUrls: deviceModel.imageUrl,
+          os: deviceModel.os,
+          screenSize: deviceModel.screenSize,
+          type: deviceModel.type,
+        );
+
+        // delete the order reservation from database
+        allOrdersReserved.forEach((order) async {
+          if (ReserveDeviceModel.fromMap(order.data()).id == deviceModel.id) {
+            await firestorReserveDevices.deleteOrderReserved(order.id);
+          }
+        });
+        //get all devices after change
+        await fetchDataAfterCheck();
+      }
+    });
+  }
+
+  Future checkEndReserveDate() async {
+    //get all orders from database
+    var allReservedDevices =
+        await firestorReserveDevices.getAllreservedDevices();
+
+    List<ReserveDeviceModel> list = [];
+    allReservedDevices.forEach((element) {
+      list.add(ReserveDeviceModel.fromMap(element.data()));
+    });
+
+    //check if found orders
+    if (list.isEmpty) return;
+    list.forEach((resvDev) async {
+      //check if date now is afer the end date in resvDev reserved
+      if (DateTime.now().isAfter(DateTime.parse(resvDev.endDate))) {
+        await unBookedDevice(resvDev);
+        //get all devices after change
+        await fetchDataAfterCheck();
+      }
+    });
+  }
+
+  Future unBookedDevice(ReserveDeviceModel reserveDeviceModel) async {
+    //get deviceModel from reservation id
+    var deviceModel = allDevicesList
+        .firstWhere((element) => element.id == reserveDeviceModel.id);
+
+    //remove reseved divice from database
+    var allReservedDevices =
+        await firestorReserveDevices.getAllreservedDevices();
+    allReservedDevices.forEach((resvDev) async {
+      if (ReserveDeviceModel.fromMap(resvDev.data()).id == deviceModel.id) {
+        await firestorReserveDevices.deleteReservedDevice(resvDev.id);
+      }
+    });
+    //return isBooked in device to false
+    await firestoreDevice.updateDevice(
+      deviceId: deviceModel.id,
+      isBooked: false,
+      battery: deviceModel.battery,
+      model: deviceModel.model,
+      deviceName: deviceModel.name,
+      imageUrls: deviceModel.imageUrl,
+      os: deviceModel.os,
+      screenSize: deviceModel.screenSize,
+      type: deviceModel.type,
+    );
   }
 
   Future filterDevices() async {
@@ -282,6 +350,7 @@ class MainProvider with ChangeNotifier {
   }
 
   DeviceModel findDeviceById(String id) {
+    print('all in find: ${allDevicesList.length}');
     return allDevicesList.firstWhere((element) => element.id == id);
   }
 
@@ -293,6 +362,7 @@ class MainProvider with ChangeNotifier {
     isSearch.value = !isSearch.value;
     notifyListeners();
   }
+
   void searchFunction(String val, List list) {
     searchList = list
         .where(
@@ -331,7 +401,7 @@ class MainProvider with ChangeNotifier {
       // clear lists after add to database
       imageUrls.clear();
       selectedImages.clear();
-      await getDevices();
+      await fetchDataAndCheckDate();
       notifyListeners();
     } on FirebaseException catch (e) {
       throw e;
@@ -365,7 +435,7 @@ class MainProvider with ChangeNotifier {
       // update new data
       await firestoreDevice.updateDevice(
           deviceId: deviceId,
-          deviceModel: modNum,
+          model: modNum,
           battery: battery,
           deviceName: deviceName,
           imageUrls: imageUrls,
@@ -373,7 +443,7 @@ class MainProvider with ChangeNotifier {
           screenSize: screenSize,
           type: type);
       //refetch all device
-      await getDevices();
+      await fetchDataAndCheckDate();
       // clear lists after add to database
       imageUrls.clear();
       selectedImages.clear();
@@ -390,7 +460,7 @@ class MainProvider with ChangeNotifier {
     } catch (e) {
       throw e;
     }
-    await getDevices();
+    await fetchDataAndCheckDate();
     notifyListeners();
   }
 
@@ -449,5 +519,15 @@ class MainProvider with ChangeNotifier {
     } else {
       return 'You can not remove all images';
     }
+  }
+
+  void changeStartDateTime(DateTime date) {
+    startDateTime = date;
+    notifyListeners();
+  }
+
+  void changeEndDateTime(DateTime date) {
+    endDateTime = date;
+    notifyListeners();
   }
 }

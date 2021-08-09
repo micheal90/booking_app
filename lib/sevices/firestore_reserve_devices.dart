@@ -1,3 +1,4 @@
+import 'package:booking_app/models/reserve_device_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestorReserveDevices {
@@ -15,5 +16,15 @@ class FirestorReserveDevices {
     var orders = await _ordersCollectionRef.get();
     return orders.docs;
   }
-  
+
+  Future addReserveDevice(ReserveDeviceModel reserveDeviceModel) async {
+    await _reservedCollectionRef.add(reserveDeviceModel.toMap());
+  }
+
+  Future deleteOrderReserved(String orderId) async {
+    await _ordersCollectionRef.doc(orderId).delete();
+  }
+  Future deleteReservedDevice(String resvId) async {
+    await _reservedCollectionRef.doc(resvId).delete();
+  }
 }

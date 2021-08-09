@@ -4,68 +4,46 @@ import 'package:booking_app/widgets_model/device_item_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PcDevicesScreen extends StatefulWidget {
-  @override
-  _PcDevicesScreenState createState() => _PcDevicesScreenState();
-}
-
-class _PcDevicesScreenState extends State<PcDevicesScreen> {
-  bool _isSearch = false;
-
-  TextEditingController? searchController = TextEditingController();
-
-  //List<DeviceModel> searchList = [];
+class PcDevicesScreen extends StatelessWidget {
+  final TextEditingController? searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: _isSearch
-            ? Consumer<MainProvider>(
-                builder: (context, value, child) => TextField(
-                  autofocus: true,
-                  controller: searchController,
-                  onChanged: (val) {
-                    setState(() {
-                      value.searchList = value.pcDevicesList
-                          .where((element) => element.name
-                              .toLowerCase()
-                              .contains(val.toLowerCase()))
-                          .toList();
-                    });
-                  },
-                  decoration: InputDecoration(
-                      hintStyle: TextStyle(color: Colors.white),
-                      hintText: " Search...",
-                      border: InputBorder.none,
-                      // errorBorder: InputBorder.none,
-                      //focusedBorder: InputBorder.none,
-                      //enabledBorder: InputBorder.none,
-                      contentPadding: EdgeInsets.all(10)),
-                  cursorColor: Colors.white,
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
-            : Text("PC Devices"),
-        actions: [
-          IconButton(
-              icon:
-                  _isSearch ? Icon(Icons.cancel_outlined) : Icon(Icons.search),
-              onPressed: () {
-                setState(() {
-                  _isSearch = !_isSearch;
+    return Consumer<MainProvider>(
+      builder: (context, valueMain, child) => Scaffold(
+        appBar: AppBar(
+          title: valueMain.isSearch.value
+              ? Consumer<MainProvider>(
+                  builder: (context, value, child) => TextField(
+                    autofocus: true,
+                    controller: searchController,
+                    onChanged: (val) =>
+                        valueMain.searchFunction(val, valueMain.pcDevicesList),
+                    decoration: InputDecoration(
+                        hintStyle: TextStyle(color: Colors.white),
+                        hintText: "Search...",
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(10)),
+                    cursorColor: Colors.white,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )
+              : Text("PC Devices"),
+          actions: [
+            IconButton(
+                icon: valueMain.isSearch.value
+                    ? Icon(Icons.cancel_outlined)
+                    : Icon(Icons.search),
+                onPressed: () {
+                  valueMain.changeIsSearch();
                   searchController!.clear();
-                });
-                Provider.of<MainProvider>(context, listen: false).searchList =
-                    [];
-              })
-        ],
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Consumer<MainProvider>(
-          builder: (context, value, child) => GridView.builder(
+                  valueMain.searchList = [];
+                })
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 1,
@@ -76,24 +54,24 @@ class _PcDevicesScreenState extends State<PcDevicesScreen> {
                 ? GestureDetector(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => DeviceDetailsScreen(
-                            deviceId: value.searchList[index].id))),
+                            deviceId: valueMain.searchList[index].id))),
                     child: DeviceItemView(
-                        imageUrl: value.searchList[index].imageUrl,
-                        name: value.searchList[index].name,
-                        model: value.searchList[index].model),
+                        imageUrl: valueMain.searchList[index].imageUrl,
+                        name: valueMain.searchList[index].name,
+                        model: valueMain.searchList[index].model),
                   )
                 : GestureDetector(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (_) => DeviceDetailsScreen(
-                            deviceId: value.pcDevicesList[index].id))),
+                            deviceId: valueMain.pcDevicesList[index].id))),
                     child: DeviceItemView(
-                        imageUrl: value.pcDevicesList[index].imageUrl,
-                        name: value.pcDevicesList[index].name,
-                        model: value.pcDevicesList[index].model),
+                        imageUrl: valueMain.pcDevicesList[index].imageUrl,
+                        name: valueMain.pcDevicesList[index].name,
+                        model: valueMain.pcDevicesList[index].model),
                   ),
             itemCount: searchController!.text.isNotEmpty
-                ? value.searchList.length
-                : value.pcDevicesList.length,
+                ? valueMain.searchList.length
+                : valueMain.pcDevicesList.length,
           ),
         ),
       ),

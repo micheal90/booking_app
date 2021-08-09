@@ -97,7 +97,7 @@ class _ReservedDevicesScreenState extends State<ReservedDevicesScreen> {
           ],
         ),
         body: Consumer<MainProvider>(
-          builder: (context, valueMain, child) => NativeDataTable.builder(
+          builder: (context, valueMain, child) =>valueMain.reservedDevicesList.isEmpty?Center(child: CustomText(text: 'No device reserved yet',alignment: Alignment.center,fontSize: 28,)) :NativeDataTable.builder(
             showSelect: false,
             totalItems: valueMain.reservedDevicesList.length,
             alwaysShowDataTable: false,
@@ -105,7 +105,7 @@ class _ReservedDevicesScreenState extends State<ReservedDevicesScreen> {
             sortColumnIndex: _sortColumnIndex,
             mobileIsLoading: CircularProgressIndicator(),
             onRefresh: () async => await valueMain.refresh(),
-            noItems: Text('No device reserved yet'),
+            
             showSort: true,
             handleNext: () {},
             columns: [

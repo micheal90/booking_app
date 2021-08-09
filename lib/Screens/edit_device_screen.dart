@@ -108,7 +108,7 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
         leading: IconButton(
             onPressed: () async {
               await Provider.of<MainProvider>(context, listen: false)
-                  .getDevices();
+                  .fetchDataAndCheckDate();
               Navigator.pop(context);
             },
             icon: Icon(Icons.arrow_back)),

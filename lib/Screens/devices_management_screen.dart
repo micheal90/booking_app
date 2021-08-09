@@ -8,17 +8,8 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DevicesManagementScreen extends StatefulWidget {
-  const DevicesManagementScreen({Key? key}) : super(key: key);
-
-  @override
-  _DevicesManagementScreenState createState() =>
-      _DevicesManagementScreenState();
-}
-
-class _DevicesManagementScreenState extends State<DevicesManagementScreen> {
-  bool _isSearch = false;
-  TextEditingController? searchController = TextEditingController();
+class DevicesManagementScreen extends StatelessWidget {
+  final TextEditingController? searchController = TextEditingController();
 
   Future<void> deleteDevice(
       MainProvider value, String id, BuildContext context) async {
@@ -37,50 +28,40 @@ class _DevicesManagementScreenState extends State<DevicesManagementScreen> {
   @override
   Widget build(BuildContext context) {
     return DoubleBack(
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: _isSearch
-              ? Consumer<MainProvider>(
-                  builder: (context, value, child) => TextField(
-                    autofocus: true,
-                    controller: searchController,
-                    onChanged: (val) {
-                      setState(() {
-                        value.searchList = value.allDevicesList
-                            .where((element) => element.name
-                                .toLowerCase()
-                                .contains(val.toLowerCase()))
-                            .toList();
-                      });
-                    },
-                    decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Colors.white),
-                        hintText: " Search...",
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(10)),
-                    cursorColor: Colors.white,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              : Text('Devices Management'),
-          actions: [
-            IconButton(
-                icon: _isSearch
-                    ? Icon(Icons.cancel_outlined)
-                    : Icon(Icons.search),
-                onPressed: () {
-                  setState(() {
-                    _isSearch = !_isSearch;
+      child: Consumer<MainProvider>(
+        builder: (context, valueMain, child) => Scaffold(
+          appBar: AppBar(
+            centerTitle: true,
+            title: valueMain.isSearch.value
+                ? Consumer<MainProvider>(
+                    builder: (context, value, child) => TextField(
+                      autofocus: true,
+                      controller: searchController,
+                      onChanged: (val) =>
+                          valueMain.searchFunction(val, value.allDevicesList),
+                      decoration: InputDecoration(
+                          hintStyle: TextStyle(color: Colors.white),
+                          hintText: "Search...",
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(10)),
+                      cursorColor: Colors.white,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                : Text('Devices Management'),
+            actions: [
+              IconButton(
+                  icon: valueMain.isSearch.value
+                      ? Icon(Icons.cancel_outlined)
+                      : Icon(Icons.search),
+                  onPressed: () {
+                    valueMain.changeIsSearch();
                     searchController!.clear();
-                  });
-                  Provider.of<MainProvider>(context, listen: false).searchList =
-                      [];
-                })
-          ],
-        ),
-        body: Consumer<MainProvider>(
-          builder: (context, value, child) => ListView.separated(
+                    valueMain.searchList = [];
+                  })
+            ],
+          ),
+          body: ListView.separated(
             padding: EdgeInsets.all(8),
             itemBuilder: (context, index) => Container(
               height: 200,
@@ -89,18 +70,18 @@ class _DevicesManagementScreenState extends State<DevicesManagementScreen> {
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => EditDeviceScreen(
                         deviceId: searchController!.text.isNotEmpty
-                            ? value.searchList[index].id
-                            : value.allDevicesList[index].id))),
+                            ? valueMain.searchList[index].id
+                            : valueMain.allDevicesList[index].id))),
                 child: DeviceItemView(
                     imageUrl: searchController!.text.isNotEmpty
-                        ? value.searchList[index].imageUrl
-                        :value.allDevicesList[index].imageUrl,
+                        ? valueMain.searchList[index].imageUrl
+                        : valueMain.allDevicesList[index].imageUrl,
                     name: searchController!.text.isNotEmpty
-                        ? value.searchList[index].name
-                        : value.allDevicesList[index].name,
+                        ? valueMain.searchList[index].name
+                        : valueMain.allDevicesList[index].name,
                     model: searchController!.text.isNotEmpty
-                        ? value.searchList[index].model
-                        : value.allDevicesList[index].model,
+                        ? valueMain.searchList[index].model
+                        : valueMain.allDevicesList[index].model,
                     trailing: IconButton(
                       icon: Icon(
                         Icons.delete,
@@ -157,22 +138,22 @@ class _DevicesManagementScreenState extends State<DevicesManagementScreen> {
               ),
             ),
             itemCount: searchController!.text.isNotEmpty
-                ? value.searchList.length
-                : value.allDevicesList.length,
+                ? valueMain.searchList.length
+                : valueMain.allDevicesList.length,
             separatorBuilder: (BuildContext context, int index) => SizedBox(
               height: 10,
             ),
           ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AddDeviceScreen(),
+              ));
+            },
+            child: Icon(Icons.add),
+          ),
+          drawer: MainDrawer(),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => AddDeviceScreen(),
-            ));
-          },
-          child: Icon(Icons.add),
-        ),
-        drawer: MainDrawer(),
       ),
     );
   }

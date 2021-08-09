@@ -42,32 +42,39 @@ class _DeviceDetailsScreenState extends State<DeviceDetailsScreen> {
                 style: TextStyle(
                     color: Colors.white, backgroundColor: Colors.black45),
               ),
-              background:deviceModel!.imageUrl.isEmpty?Image.network(notImageAvailableUrl,fit: BoxFit.fill,) :CarouselSlider.builder(
-                  itemCount: deviceModel!.imageUrl.length,
-                  itemBuilder: (context, index, realIndex) => Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: FadeInImage(
-                          placeholder: AssetImage('assets/images/loading.png'),
-                          image: NetworkImage(
-                            deviceModel!.imageUrl[index],
+              background: deviceModel!.imageUrl.isEmpty
+                  ? Image.network(
+                      notImageAvailableUrl,
+                      fit: BoxFit.fill,
+                    )
+                  : CarouselSlider.builder(
+                      itemCount: deviceModel!.imageUrl.length,
+                      itemBuilder: (context, index, realIndex) => Container(
+                            width: double.infinity,
+                            height: double.infinity,
+                            child: FadeInImage(
+                              placeholder:
+                                  AssetImage('assets/images/loading.png'),
+                              image: NetworkImage(
+                                deviceModel!.imageUrl[index],
+                              ),
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                  options: CarouselOptions(
-                    aspectRatio: 1,
-                    viewportFraction: 1,
-                    initialPage: 0,
-                    enableInfiniteScroll: false,
-                    reverse: false,
-                    autoPlay: deviceModel!.imageUrl.length > 1 ? true : false,
-                    autoPlayInterval: Duration(seconds: 3),
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    enlargeCenterPage: true,
-                    scrollDirection: Axis.horizontal,
-                  ))
+                      options: CarouselOptions(
+                        aspectRatio: 1,
+                        viewportFraction: 1,
+                        initialPage: 0,
+                        enableInfiniteScroll: false,
+                        reverse: false,
+                        autoPlay:
+                            deviceModel!.imageUrl.length > 1 ? true : false,
+                        autoPlayInterval: Duration(seconds: 3),
+                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                        autoPlayCurve: Curves.fastOutSlowIn,
+                        enlargeCenterPage: true,
+                        scrollDirection: Axis.horizontal,
+                      ))
               // background: FadeInImage(
               //   placeholder: AssetImage('assets/images/loading.png'),
               //   image: NetworkImage(deviceModel.imageUrl[0]),

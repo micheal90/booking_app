@@ -15,7 +15,7 @@ class AuthProvider with ChangeNotifier {
   AdminModel? adminModel;
   List<EmployeeModel> employeeList = [];
   List<AdminModel> adminList = [];
-  List<dynamic> searchList = [];
+  List<dynamic> allUsers = [];
 
   bool get isAuth {
     return adminModel != null;
@@ -26,18 +26,29 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future getAllUsers() async {
+    allUsers.clear();
+    await getAdmin();
+    await getEmployee();
+  }
+
   Future getAdmin() async {
     adminList.clear();
     var admins = await firestoreUsers.getAdmins();
-    admins.forEach((admin) => adminList.add(AdminModel.fromMap(admin.data())));
+    admins.forEach((admin) {
+      adminList.add(AdminModel.fromMap(admin.data()));
+      allUsers.add(AdminModel.fromMap(admin.data()));
+    });
     notifyListeners();
   }
 
   Future getEmployee() async {
     employeeList.clear();
     var employees = await firestoreUsers.getEmployees();
-    employees
-        .forEach((emp) => employeeList.add(EmployeeModel.fromMap(emp.data())));
+    employees.forEach((emp) {
+      employeeList.add(EmployeeModel.fromMap(emp.data()));
+      allUsers.add(EmployeeModel.fromMap(emp.data()));
+    });
     notifyListeners();
   }
 

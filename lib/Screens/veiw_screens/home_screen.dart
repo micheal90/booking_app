@@ -13,14 +13,8 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  bool _isSearch = false;
-  TextEditingController? searchController = TextEditingController();
+class HomeScreen extends StatelessWidget {
+  final TextEditingController? searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,26 +22,16 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Consumer<MainProvider>(
         builder: (context, valueMain, child) => Scaffold(
           appBar: AppBar(
-            title: _isSearch
+            title: valueMain.isSearch.value
                 ? TextField(
                     autofocus: true,
                     controller: searchController,
-                    onChanged: (val) {
-                      setState(() {
-                        valueMain.searchList = valueMain.devicesNotBookedList
-                            .where((element) => element.name
-                                .toLowerCase()
-                                .contains(val.toLowerCase()))
-                            .toList();
-                      });
-                    },
+                    onChanged: (val) => valueMain.searchFunction(
+                        val, valueMain.devicesNotBookedList),
                     decoration: InputDecoration(
                         hintStyle: TextStyle(color: Colors.white),
                         hintText: " Search...",
                         border: InputBorder.none,
-                        // errorBorder: InputBorder.none,
-                        //focusedBorder: InputBorder.none,
-                        //enabledBorder: InputBorder.none,
                         contentPadding: EdgeInsets.all(10)),
                     cursorColor: Colors.white,
                     style: TextStyle(color: Colors.white),
@@ -55,18 +39,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 : Text("Booking App"),
             actions: [
               IconButton(
-                  icon: _isSearch
+                  icon: valueMain.isSearch.value
                       ? Icon(Icons.cancel_outlined)
                       : Icon(Icons.search),
                   onPressed: () {
-                    setState(() {
-                      _isSearch = !_isSearch;
-                      searchController!.clear();
-                    });
+                    valueMain.changeIsSearch();
                     valueMain.searchList = [];
+                    searchController!.clear();
                   })
             ],
-            centerTitle: true,
           ),
           body: RefreshIndicator(
             onRefresh: () async => await valueMain.refresh(),
@@ -97,11 +78,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       // ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   buildRowCategories(context, valueMain),
-                  // SizedBox(
+                  //const SizedBox(
                   //   height: 15,
                   // ),
                   CustomText(
@@ -110,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontWeight: FontWeight.bold,
                   ),
 
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   valueMain.isLoading.value

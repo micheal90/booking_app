@@ -1,7 +1,7 @@
 import 'package:booking_app/Screens/Profile_screen.dart';
 import 'package:booking_app/Screens/devices_management_screen.dart';
+import 'package:booking_app/Screens/schedule_planning.dart';
 import 'package:booking_app/Screens/users_management_screen.dart';
-import 'package:booking_app/Screens/planning_management.dart';
 import 'package:booking_app/Screens/reserved_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/bottom_navigation_bar_screen.dart';
 import 'package:booking_app/providers/auth_provider.dart';
@@ -86,8 +86,8 @@ class MainDrawer extends StatelessWidget {
             CustomListTile(
               onTap: () => Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                      builder: (context) => PlanningManagementScreen())),
-              title: 'Planning Management',
+                      builder: (context) => SchedulePlanningScreen())),
+              title: 'Schedule Planning',
               leading: Icon(Icons.schedule),
             ),
             CustomListTile(

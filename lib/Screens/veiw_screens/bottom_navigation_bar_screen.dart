@@ -25,10 +25,9 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
   ];
   @override
   void initState() {
-    Provider.of<MainProvider>(context, listen: false).getDevices();
-    Provider.of<AuthProvider>(context, listen: false).getAdmin();
-    Provider.of<AuthProvider>(context, listen: false).getEmployee();
-
+    Provider.of<MainProvider>(context, listen: false).fetchDataAndCheckDate();
+    Provider.of<AuthProvider>(context, listen: false).getAllUsers();
+    
     super.initState();
   }
 
