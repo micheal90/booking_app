@@ -19,8 +19,7 @@ class _OthersDevicesScreenState extends State<OthersDevicesScreen> {
       builder: (context, valueMain, child) => Scaffold(
         appBar: AppBar(
           title: valueMain.isSearch.value
-              ? Consumer<MainProvider>(
-                  builder: (context, value, child) => TextField(
+              ? TextField(
                     autofocus: true,
                     controller: searchController,
                     onChanged: (val) => valueMain.searchFunction(
@@ -32,7 +31,7 @@ class _OthersDevicesScreenState extends State<OthersDevicesScreen> {
                         contentPadding: EdgeInsets.all(10)),
                     cursorColor: Colors.white,
                     style: TextStyle(color: Colors.white),
-                  ),
+                  
                 )
               : Text("Others Devices"),
           actions: [

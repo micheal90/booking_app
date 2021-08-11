@@ -1,3 +1,4 @@
+import 'package:booking_app/Screens/search_screens/search_devices.dart';
 import 'package:booking_app/Screens/veiw_screens/device_details_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/android_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/ios_devices_screen.dart';
@@ -22,31 +23,10 @@ class HomeScreen extends StatelessWidget {
       child: Consumer<MainProvider>(
         builder: (context, valueMain, child) => Scaffold(
           appBar: AppBar(
-            title: valueMain.isSearch.value
-                ? TextField(
-                    autofocus: true,
-                    controller: searchController,
-                    onChanged: (val) => valueMain.searchFunction(
-                        val, valueMain.devicesNotBookedList),
-                    decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Colors.white),
-                        hintText: " Search...",
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(10)),
-                    cursorColor: Colors.white,
-                    style: TextStyle(color: Colors.white),
-                  )
-                : Text("Booking App"),
+            title: Text("Booking App"),
             actions: [
               IconButton(
-                  icon: valueMain.isSearch.value
-                      ? Icon(Icons.cancel_outlined)
-                      : Icon(Icons.search),
-                  onPressed: () {
-                    valueMain.changeIsSearch();
-                    valueMain.searchList = [];
-                    searchController!.clear();
-                  })
+                  onPressed: () =>showSearch(context: context, delegate: SearchDevices()), icon: Icon(Icons.search))
             ],
           ),
           body: RefreshIndicator(

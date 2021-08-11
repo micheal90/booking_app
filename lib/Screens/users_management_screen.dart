@@ -2,6 +2,7 @@ import 'package:booking_app/Screens/add_admin.dart';
 import 'package:booking_app/Screens/add_employee_screen.dart';
 import 'package:booking_app/Screens/admin_data_screen.dart';
 import 'package:booking_app/Screens/employee_data_screen.dart';
+import 'package:booking_app/Screens/search_screens/search_users.dart';
 import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/main_drawer.dart';
@@ -35,8 +36,8 @@ class UsersManagementScreen extends StatelessWidget {
                           child: Text('No')),
                       TextButton(
                         onPressed: () async => isAdmin
-                            ? await deletAdmin(context,id)
-                            : await deleteEmployee(context,id),
+                            ? await deletAdmin(context, id)
+                            : await deleteEmployee(context, id),
                         child: Text('Yes'),
                       ),
                     ],
@@ -46,7 +47,7 @@ class UsersManagementScreen extends StatelessWidget {
             ));
   }
 
-  Future deleteEmployee(BuildContext context,String id) async {
+  Future deleteEmployee(BuildContext context, String id) async {
     try {
       await Provider.of<AuthProvider>(context, listen: false)
           .deleteEmployee(id);
@@ -59,7 +60,7 @@ class UsersManagementScreen extends StatelessWidget {
     }
   }
 
-  Future deletAdmin(BuildContext context,String id) async {
+  Future deletAdmin(BuildContext context, String id) async {
     try {
       await Provider.of<AuthProvider>(context, listen: false).deleteAdmin(id);
       Navigator.of(context).pop();
@@ -79,6 +80,12 @@ class UsersManagementScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text('Users Management'),
+            actions: [
+              IconButton(
+                  onPressed: () =>
+                      showSearch(context: context, delegate: SearchUsers()),
+                  icon: Icon(Icons.search))
+            ],
             bottom: const TabBar(tabs: [
               Tab(
                 icon: Icon(Icons.person),

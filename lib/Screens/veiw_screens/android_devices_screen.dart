@@ -1,5 +1,6 @@
 import 'package:booking_app/Screens/veiw_screens/device_details_screen.dart';
 import 'package:booking_app/providers/main_provider.dart';
+import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/device_item_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,8 +14,7 @@ class AndroidDevicesScreen extends StatelessWidget {
       builder: (context, valueMain, child) => Scaffold(
         appBar: AppBar(
           title: valueMain.isSearch.value
-              ? Consumer<MainProvider>(
-                  builder: (context, value, child) => TextField(
+              ? TextField(
                     autofocus: true,
                     controller: searchController,
                     onChanged: (val) => valueMain.searchFunction(
@@ -26,7 +26,7 @@ class AndroidDevicesScreen extends StatelessWidget {
                         contentPadding: EdgeInsets.all(10)),
                     cursorColor: Colors.white,
                     style: TextStyle(color: Colors.white),
-                  ),
+                 
                 )
               : Text("Android Devices"),
           actions: [
@@ -41,7 +41,15 @@ class AndroidDevicesScreen extends StatelessWidget {
                 })
           ],
         ),
-        body: Padding(
+        body:valueMain.androidDevicesList.isEmpty
+            ? Center(
+                child: CustomText(
+                  text: 'No devices',
+                  alignment: Alignment.center,
+                  fontSize: 22,
+                ),
+              )
+            : Padding(
           padding: const EdgeInsets.all(10.0),
           child: GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -66,7 +66,7 @@ class MainDrawer extends StatelessWidget {
               onTap: () => Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
                       builder: (context) => UsersManagementScreen())),
-              title: 'Employees Management',
+              title: 'Users Management',
               leading: Icon(Icons.attractions_outlined),
             ),
             CustomListTile(
