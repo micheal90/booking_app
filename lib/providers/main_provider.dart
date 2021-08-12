@@ -354,23 +354,6 @@ class MainProvider with ChangeNotifier {
     return allDevicesList.firstWhere((element) => element.id == id);
   }
 
-  // void removeFromSearchList(String id) {
-  //   searchList.removeWhere((element) => element.id == id);
-  //   notifyListeners();
-  // }
-  void changeIsSearch() {
-    isSearch.value = !isSearch.value;
-    notifyListeners();
-  }
-
-  void searchFunction(String val, List list) {
-    searchList = list
-        .where(
-            (element) => element.name.toLowerCase().contains(val.toLowerCase()))
-        .toList();
-    notifyListeners();
-  }
-
   Future addDevice(
       {required String deviceName,
       required String modNum,

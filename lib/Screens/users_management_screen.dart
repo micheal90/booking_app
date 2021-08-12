@@ -2,7 +2,7 @@ import 'package:booking_app/Screens/add_admin.dart';
 import 'package:booking_app/Screens/add_employee_screen.dart';
 import 'package:booking_app/Screens/admin_data_screen.dart';
 import 'package:booking_app/Screens/employee_data_screen.dart';
-import 'package:booking_app/Screens/search_screens/search_users.dart';
+import 'package:booking_app/models/search_models/search_users.dart';
 import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/main_drawer.dart';

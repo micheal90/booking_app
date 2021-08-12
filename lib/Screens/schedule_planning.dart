@@ -11,8 +11,7 @@ import 'package:provider/provider.dart';
 
 class SchedulePlanningScreen extends StatefulWidget {
   @override
-  _SchedulePlanningScreenState createState() =>
-      _SchedulePlanningScreenState();
+  _SchedulePlanningScreenState createState() => _SchedulePlanningScreenState();
 }
 
 class _SchedulePlanningScreenState extends State<SchedulePlanningScreen> {
@@ -44,7 +43,6 @@ class _SchedulePlanningScreenState extends State<SchedulePlanningScreen> {
     return DoubleBack(
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
           title: Text('Schedule Planning'),
         ),
         body: Consumer<MainProvider>(
@@ -54,7 +52,7 @@ class _SchedulePlanningScreenState extends State<SchedulePlanningScreen> {
                   child: CustomText(
                   text: 'No scheduled reserved yet',
                   alignment: Alignment.center,
-                  fontSize: 28,
+                  fontSize: 22,
                 ))
               : NativeDataTable.builder(
                   showSelect: false,

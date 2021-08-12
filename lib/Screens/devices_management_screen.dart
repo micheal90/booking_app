@@ -1,5 +1,6 @@
 import 'package:booking_app/Screens/add_device.dart';
 import 'package:booking_app/Screens/edit_device_screen.dart';
+import 'package:booking_app/models/search_models/search_devices.dart';
 import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/device_item_view.dart';
@@ -28,40 +29,18 @@ class DevicesManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DoubleBack(
-      child: Consumer<MainProvider>(
-        builder: (context, valueMain, child) => Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: valueMain.isSearch.value
-                ? Consumer<MainProvider>(
-                    builder: (context, value, child) => TextField(
-                      autofocus: true,
-                      controller: searchController,
-                      onChanged: (val) =>
-                          valueMain.searchFunction(val, value.allDevicesList),
-                      decoration: InputDecoration(
-                          hintStyle: TextStyle(color: Colors.white),
-                          hintText: "Search...",
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(10)),
-                      cursorColor: Colors.white,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                : Text('Devices Management'),
-            actions: [
-              IconButton(
-                  icon: valueMain.isSearch.value
-                      ? Icon(Icons.cancel_outlined)
-                      : Icon(Icons.search),
-                  onPressed: () {
-                    valueMain.changeIsSearch();
-                    searchController!.clear();
-                    valueMain.searchList = [];
-                  })
-            ],
-          ),
-          body: ListView.separated(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Devices Management'),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () =>
+                    showSearch(context: context, delegate: SearchDevices()))
+          ],
+        ),
+        body: Consumer<MainProvider>(
+          builder: (context, valueMain, child) => ListView.separated(
             padding: EdgeInsets.all(8),
             itemBuilder: (context, index) => Container(
               height: 200,
@@ -144,16 +123,16 @@ class DevicesManagementScreen extends StatelessWidget {
               height: 10,
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AddDeviceScreen(),
-              ));
-            },
-            child: Icon(Icons.add),
-          ),
-          drawer: MainDrawer(),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AddDeviceScreen(),
+            ));
+          },
+          child: Icon(Icons.add),
+        ),
+        drawer: MainDrawer(),
       ),
     );
   }

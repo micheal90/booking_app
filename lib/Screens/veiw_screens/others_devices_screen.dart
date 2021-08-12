@@ -1,5 +1,6 @@
 import 'package:booking_app/Screens/veiw_screens/device_details_screen.dart';
 import 'package:booking_app/providers/main_provider.dart';
+import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/device_item_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,40 +16,23 @@ class _OthersDevicesScreenState extends State<OthersDevicesScreen> {
   // List<DeviceModel> searchList = [];
   @override
   Widget build(BuildContext context) {
-    return Consumer<MainProvider>(
-      builder: (context, valueMain, child) => Scaffold(
-        appBar: AppBar(
-          title: valueMain.isSearch.value
-              ? TextField(
-                    autofocus: true,
-                    controller: searchController,
-                    onChanged: (val) => valueMain.searchFunction(
-                        val, valueMain.othersDevicesList),
-                    decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Colors.white),
-                        hintText: "Search...",
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(10)),
-                    cursorColor: Colors.white,
-                    style: TextStyle(color: Colors.white),
-                  
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Others Devices"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Consumer<MainProvider>(
+          builder: (context, valueMain, child) =>valueMain.isLoading.value? Center(child: CircularProgressIndicator()):valueMain
+                  .othersDevicesList.isEmpty
+              ? Center(
+                  child: CustomText(
+                    text: 'No devices',
+                    alignment: Alignment.center,
+                    fontSize: 22,
+                  ),
                 )
-              : Text("Others Devices"),
-          actions: [
-            IconButton(
-                icon: _isSearch
-                    ? Icon(Icons.cancel_outlined)
-                    : Icon(Icons.search),
-                onPressed: () {
-                  valueMain.changeIsSearch();
-                  valueMain.searchList = [];
-                  searchController!.clear();
-                })
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: GridView.builder(
+              : GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 1,

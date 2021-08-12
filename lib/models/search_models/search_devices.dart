@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SearchDevices extends SearchDelegate<String> {
- 
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -31,7 +30,6 @@ class SearchDevices extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
     throw UnimplementedError();
   }
 
@@ -39,7 +37,6 @@ class SearchDevices extends SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
     final List<DeviceModel> searchList =
         Provider.of<MainProvider>(context).allDevicesList;
-
     final suggestionList = searchList
         .where((element) =>
             element.name.toLowerCase().startsWith(query.toLowerCase()))

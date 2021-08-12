@@ -1,5 +1,6 @@
 import 'package:booking_app/Screens/veiw_screens/device_details_screen.dart';
 import 'package:booking_app/providers/main_provider.dart';
+import 'package:booking_app/widgets_model/custom_text.dart';
 import 'package:booking_app/widgets_model/device_item_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,40 +9,23 @@ class IosDevicesScreen extends StatelessWidget {
   final TextEditingController? searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Consumer<MainProvider>(
-      builder: (context, valueMain, child) => Scaffold(
-        appBar: AppBar(
-          title: valueMain.isSearch.value
-              ? TextField(
-                    autofocus: true,
-                    controller: searchController,
-                    onChanged: (val) =>
-                        valueMain.searchFunction(val, valueMain.iosDevicesList),
-                    decoration: InputDecoration(
-                        hintStyle: TextStyle(color: Colors.white),
-                        hintText: " Search...",
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(10)),
-                    cursorColor: Colors.white,
-                    style: TextStyle(color: Colors.white),
-                  )
-                
-              : Text("IOS Devices"),
-          actions: [
-            IconButton(
-                icon: valueMain.isSearch.value
-                    ? Icon(Icons.cancel_outlined)
-                    : Icon(Icons.search),
-                onPressed: () {
-                  valueMain.changeIsSearch();
-                  valueMain.searchList = [];
-                  searchController!.clear();
-                })
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: GridView.builder(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("IOS Devices"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Consumer<MainProvider>(
+          builder: (context, valueMain, child) =>valueMain.isLoading.value? Center(child: CircularProgressIndicator()):valueMain
+                  .iosDevicesList.isEmpty
+              ? Center(
+                  child: CustomText(
+                    text: 'No devices',
+                    alignment: Alignment.center,
+                    fontSize: 22,
+                  ),
+                )
+              : GridView.builder(
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 1,

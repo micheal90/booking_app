@@ -1,9 +1,9 @@
-import 'package:booking_app/Screens/search_screens/search_devices.dart';
 import 'package:booking_app/Screens/veiw_screens/device_details_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/android_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/ios_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/others_devices_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/pc_devices_screen.dart';
+import 'package:booking_app/models/search_models/search_devices.dart';
 
 import 'package:booking_app/providers/main_provider.dart';
 import 'package:booking_app/widgets_model/custom_text.dart';

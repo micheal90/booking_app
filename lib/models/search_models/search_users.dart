@@ -1,7 +1,5 @@
 import 'package:booking_app/Screens/admin_data_screen.dart';
 import 'package:booking_app/Screens/employee_data_screen.dart';
-import 'package:booking_app/Screens/veiw_screens/device_details_screen.dart';
-import 'package:booking_app/models/admin_model.dart';
 import 'package:booking_app/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +30,6 @@ class SearchUsers extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
     throw UnimplementedError();
   }
 
