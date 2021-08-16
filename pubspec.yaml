@@ -32,6 +32,7 @@ dependencies:
   firebase_storage: ^10.0.1
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.1
   flutter_native_image: ^0.0.6+1
   flutter_speed_dial: ^3.0.5
   google_fonts: ^2.1.0
@@ -45,6 +46,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: true
+  #ios: true
+  image_path: "assets/icon/icon.png"
+
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

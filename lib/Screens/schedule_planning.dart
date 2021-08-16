@@ -61,7 +61,8 @@ class _SchedulePlanningScreenState extends State<SchedulePlanningScreen> {
                   sortAscending: _sortAscending,
                   sortColumnIndex: _sortColumnIndex,
                   mobileIsLoading: CircularProgressIndicator(),
-                  onRefresh: () async => await valueMain.refresh(),
+                  onRefresh: () async =>
+                      await valueMain.getAllorderReservDevices(), //change end
                   showSort: true,
                   handleNext: () {},
                   columns: [

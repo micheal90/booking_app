@@ -131,7 +131,6 @@ class MainProvider with ChangeNotifier {
             'https://firebasestorage.googleapis.com/v0/b/booking-app-d737d.appspot.com/o/categoriesIcons%2Fothers-96.png?alt=media&token=b95ea046-d22c-46c5-b782-a17303832320'),
   ];
 
-  List<dynamic> searchList = [];
   List<DeviceModel> devicesNotBookedList = [];
   List<DeviceModel> androidDevicesList = [];
   List<DeviceModel> iosDevicesList = [];
@@ -244,13 +243,25 @@ class MainProvider with ChangeNotifier {
         );
 
         // delete the order reservation from database
-        allOrdersReserved.forEach((order) async {
-          if (ReserveDeviceModel.fromMap(order.data()).id == deviceModel.id) {
-            await firestorReserveDevices.deleteOrderReserved(order.id);
+        allOrdersReserved.forEach((orderdel) async {
+          if (ReserveDeviceModel.fromMap(orderdel.data()).id ==
+              deviceModel.id) {
+            await firestorReserveDevices.deleteOrderReserved(orderdel.id);
           }
         });
         //get all devices after change
         await fetchDataAfterCheck();
+      }
+      //check if order is expire
+      if (DateTime.now().isAfter(start) && DateTime.now().isAfter(end)) {
+        // delete the order reservation from database
+        allOrdersReserved.forEach((orderdel) async {
+          DeviceModel deviceModel = findDeviceById(order.id);
+          if (ReserveDeviceModel.fromMap(orderdel.data()).id ==
+              deviceModel.id) {
+            await firestorReserveDevices.deleteOrderReserved(orderdel.id);
+          }
+        });
       }
     });
   }

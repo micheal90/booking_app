@@ -18,7 +18,6 @@ class ReservedDevicesScreen extends StatefulWidget {
 }
 
 class _ReservedDevicesScreenState extends State<ReservedDevicesScreen> {
-  TextEditingController? searchController = TextEditingController();
   bool _sortAscending = true;
   int _sortColumnIndex = 0;
 
@@ -143,113 +142,55 @@ class _ReservedDevicesScreenState extends State<ReservedDevicesScreen> {
           Consumer<MainProvider>(
             builder: (context, valueMain, child) => Expanded(
               child: ListView.separated(
-                itemBuilder: (context, index) => searchController!
-                        .text.isNotEmpty
-                    ? ListTile(
-                        leading: CircleAvatar(
-                          radius: 25,
-                          backgroundColor: KPrimaryColor,
-                          child: FittedBox(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CustomText(
-                                text: valueMain.searchList[index].type,
-                              ),
-                            ),
-                          ),
-                        ),
-                        title: CustomText(
-                          color: KPrimaryColor,
-                          text: valueMain.searchList[index].deviceName,
-                        ),
-                        subtitle: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomText(
-                              text: 'From: ' +
-                                  DateFormat.yMd().format(DateTime.parse(
-                                      valueMain.reservedDevicesList[index]
-                                          .startDate)),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            CustomText(
-                              text: 'To: ' +
-                                  DateFormat.yMd().format(DateTime.parse(
-                                      valueMain
-                                          .reservedDevicesList[index].endDate)),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                          ],
-                        ),
-                        trailing: Consumer<AuthProvider>(
-                          builder: (context, valueAuth, child) => Text(
-                            'By Employee\n' +
-                                valueAuth
-                                    .findEmployeeById(valueMain
-                                        .reservedDevicesList[index].userId)
-                                    .name,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      )
-                    : ListTile(
-                        leading: CircleAvatar(
-                          radius: 25,
-                          backgroundColor: KPrimaryColor,
-                          child: FittedBox(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CustomText(
-                                text: valueMain.reservedDevicesList[index].type,
-                              ),
-                            ),
-                          ),
-                        ),
-                        title: CustomText(
-                          color: KPrimaryColor,
-                          text: valueMain.reservedDevicesList[index].deviceName,
-                        ),
-                        subtitle: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomText(
-                              text: 'From: ' +
-                                  DateFormat.yMd().format(DateTime.parse(
-                                      valueMain.reservedDevicesList[index]
-                                          .startDate)),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            CustomText(
-                              text: 'To: ' +
-                                  DateFormat.yMd().format(DateTime.parse(
-                                      valueMain
-                                          .reservedDevicesList[index].endDate)),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                          ],
-                        ),
-                        trailing: Text(
-                          'By Employee\n' +
-                              Provider.of<AuthProvider>(context, listen: false)
-                                  .findEmployeeById(valueMain
-                                      .reservedDevicesList[index].userId)
-                                  .name,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16),
+                itemBuilder: (context, index) => ListTile(
+                  leading: CircleAvatar(
+                    radius: 25,
+                    backgroundColor: KPrimaryColor,
+                    child: FittedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: CustomText(
+                          text: valueMain.reservedDevicesList[index].type,
                         ),
                       ),
-                itemCount: searchController!.text.isNotEmpty
-                    ? valueMain.searchList.length
-                    : valueMain.reservedDevicesList.length,
+                    ),
+                  ),
+                  title: CustomText(
+                    color: KPrimaryColor,
+                    text: valueMain.reservedDevicesList[index].deviceName,
+                  ),
+                  subtitle: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomText(
+                        text: 'From: ' +
+                            DateFormat.yMd().format(DateTime.parse(valueMain
+                                .reservedDevicesList[index].startDate)),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      CustomText(
+                        text: 'To: ' +
+                            DateFormat.yMd().format(DateTime.parse(
+                                valueMain.reservedDevicesList[index].endDate)),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                    ],
+                  ),
+                  trailing: Text(
+                    'By Employee\n' +
+                        Provider.of<AuthProvider>(context, listen: false)
+                            .findEmployeeById(
+                                valueMain.reservedDevicesList[index].userId)
+                            .name,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                itemCount: valueMain.reservedDevicesList.length,
                 separatorBuilder: (BuildContext context, int index) =>
                     Divider(),
               ),

@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PcDevicesScreen extends StatelessWidget {
-  final TextEditingController? searchController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,35 +32,18 @@ class PcDevicesScreen extends StatelessWidget {
                           crossAxisSpacing: 10,
                           mainAxisExtent: 200,
                           mainAxisSpacing: 10),
-                      itemBuilder: (context, index) => searchController!
-                              .text.isNotEmpty
-                          ? GestureDetector(
-                              onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (_) => DeviceDetailsScreen(
-                                          deviceId:
-                                              valueMain.searchList[index].id))),
-                              child: DeviceItemView(
-                                  imageUrl:
-                                      valueMain.searchList[index].imageUrl,
-                                  name: valueMain.searchList[index].name,
-                                  model: valueMain.searchList[index].model),
-                            )
-                          : GestureDetector(
-                              onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (_) => DeviceDetailsScreen(
-                                          deviceId: valueMain
-                                              .pcDevicesList[index].id))),
-                              child: DeviceItemView(
-                                  imageUrl:
-                                      valueMain.pcDevicesList[index].imageUrl,
-                                  name: valueMain.pcDevicesList[index].name,
-                                  model: valueMain.pcDevicesList[index].model),
-                            ),
-                      itemCount: searchController!.text.isNotEmpty
-                          ? valueMain.searchList.length
-                          : valueMain.pcDevicesList.length,
+                      itemBuilder: (context, index) => GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) => DeviceDetailsScreen(
+                                    deviceId:
+                                        valueMain.pcDevicesList[index].id))),
+                        child: DeviceItemView(
+                            imageUrl: valueMain.pcDevicesList[index].imageUrl,
+                            name: valueMain.pcDevicesList[index].name,
+                            model: valueMain.pcDevicesList[index].model),
+                      ),
+                      itemCount: valueMain.pcDevicesList.length,
                     ),
         ),
       ),

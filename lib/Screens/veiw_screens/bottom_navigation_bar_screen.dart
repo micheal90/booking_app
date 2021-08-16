@@ -39,7 +39,6 @@ class _BottomNavigationBarScreenState extends State<BottomNavigationBarScreen> {
         onTap: (value) => setState(() {
           currentIndex = value;
         }),
-        selectedItemColor: KPrimaryColor,
         currentIndex: currentIndex,
         items: [
           BottomNavigationBarItem(

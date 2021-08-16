@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DevicesManagementScreen extends StatelessWidget {
-  final TextEditingController? searchController = TextEditingController();
-
   Future<void> deleteDevice(
       MainProvider value, String id, BuildContext context) async {
     try {
@@ -48,19 +46,11 @@ class DevicesManagementScreen extends StatelessWidget {
               child: GestureDetector(
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => EditDeviceScreen(
-                        deviceId: searchController!.text.isNotEmpty
-                            ? valueMain.searchList[index].id
-                            : valueMain.allDevicesList[index].id))),
+                        deviceId: valueMain.allDevicesList[index].id))),
                 child: DeviceItemView(
-                    imageUrl: searchController!.text.isNotEmpty
-                        ? valueMain.searchList[index].imageUrl
-                        : valueMain.allDevicesList[index].imageUrl,
-                    name: searchController!.text.isNotEmpty
-                        ? valueMain.searchList[index].name
-                        : valueMain.allDevicesList[index].name,
-                    model: searchController!.text.isNotEmpty
-                        ? valueMain.searchList[index].model
-                        : valueMain.allDevicesList[index].model,
+                    imageUrl: valueMain.allDevicesList[index].imageUrl,
+                    name: valueMain.allDevicesList[index].name,
+                    model: valueMain.allDevicesList[index].model,
                     trailing: IconButton(
                       icon: Icon(
                         Icons.delete,
@@ -89,23 +79,13 @@ class DevicesManagementScreen extends StatelessWidget {
                                         onPressed: () =>
                                             Navigator.of(context).pop(),
                                         child: Text('No')),
-                                    searchController!.text.isNotEmpty
-                                        ? TextButton(
-                                            onPressed: () async {
-                                              deleteDevice(
-                                                  value,
-                                                  value.searchList[index].id,
-                                                  context);
-                                            },
-                                            child: Text('Yes'))
-                                        : TextButton(
-                                            onPressed: () async =>
-                                                await deleteDevice(
-                                                    value,
-                                                    value.allDevicesList[index]
-                                                        .id,
-                                                    context),
-                                            child: Text('Yes')),
+                                    TextButton(
+                                        onPressed: () async =>
+                                            await deleteDevice(
+                                                value,
+                                                value.allDevicesList[index].id,
+                                                context),
+                                        child: Text('Yes')),
                                   ],
                                 )
                               ],
@@ -116,9 +96,7 @@ class DevicesManagementScreen extends StatelessWidget {
                     )),
               ),
             ),
-            itemCount: searchController!.text.isNotEmpty
-                ? valueMain.searchList.length
-                : valueMain.allDevicesList.length,
+            itemCount: valueMain.allDevicesList.length,
             separatorBuilder: (BuildContext context, int index) => SizedBox(
               height: 10,
             ),
