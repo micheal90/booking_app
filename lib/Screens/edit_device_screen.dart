@@ -64,6 +64,8 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
         deviceName: nameController!.text.trim(),
         modNum: modelController!.text.trim(),
         os: osController!.text.trim(),
+        isBooked: deviceModel!.isBooked,
+        imageUrl: deviceModel!.imageUrl,
         type: categoryType,
         screenSize: screenSizeController!.text.trim(),
         battery: batteryController!.text.trim(),
@@ -99,257 +101,304 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
     }
   }
 
+  Future deleteImage(int index) async {
+    //var device = allDevicesList.firstWhere((element) => element.id == id);
+    if (deviceModel!.imageUrl.length > 1) {
+      //remove image localy
+      setState(() {
+        deviceModel!.imageUrl.removeAt(index);
+      });
+
+      return 'image has been deleted';
+    } else {
+      return 'You can not remove all images';
+    }
+  }
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => Consumer<MainProvider>(
+            builder: (context, valueMain, child) => new AlertDialog(
+              title: new Text('Are you sure?'),
+              content: new Text('Do you want to discard the changes'),
+              actions: [
+                valueMain.isLoading.value
+                    ? Center(child: CircularProgressIndicator())
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: new Text('No'),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              await valueMain.fetchDataAfterCheck();
+                              Navigator.of(context).pop(true);
+                            },
+                            child: new Text('Yes'),
+                          ),
+                        ],
+                      ),
+              ],
+            ),
+          ),
+        )) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Edit Device"),
-        centerTitle: true,
-        leading: IconButton(
-            onPressed: () async {
-              await Provider.of<MainProvider>(context, listen: false)
-                  .fetchDataAndCheckDate();
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back)),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: CustomText(
-                        text: 'Are you sure!',
-                      ),
-                      content: Consumer<MainProvider>(
-                        builder: (context, value, child) => Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomText(
-                              text: ' device delete',
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                    child: Text('No')),
-                                TextButton(
-                                    onPressed: () async =>
-                                        await deleteDevice(value, context),
-                                    child: Text('Yes')),
-                              ],
-                            )
-                          ],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Edit Device"),
+          // leading: IconButton(
+          //     onPressed: () async {
+          //       await Provider.of<MainProvider>(context, listen: false)
+          //           .fetchDataAfterCheck();
+          //       Navigator.pop(context);
+          //     },
+          //     icon: Icon(Icons.arrow_back)),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: CustomText(
+                          text: 'Are you sure!',
                         ),
-                      ),
-                    ),
-                  );
-                },
-                icon: Icon(Icons.delete_outline)),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: Consumer<MainProvider>(
-              builder: (context, valueMain, child) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 150,
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: Stack(
-                                children: [
-                                  Image.network(
-                                    deviceModel!.imageUrl[index],
-                                  ),
-                                  Positioned(
-                                    top: 0,
-                                    right: 0,
-                                    child: IconButton(
-                                        color: Colors.red.shade500,
-                                        icon: Icon(
-                                          Icons.cancel_outlined,
-                                        ),
-                                        onPressed: () async {
-                                          await valueMain
-                                              .deleteImage(
-                                                  index, deviceModel!.id)
-                                              .then((value) {
-                                            return ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(value)));
-                                          });
-                                        }),
-                                  )
-                                ],
+                        content: Consumer<MainProvider>(
+                          builder: (context, value, child) => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CustomText(
+                                text: ' device delete',
                               ),
-                            ),
-                        itemCount: deviceModel!.imageUrl.length),
-                  ),
-                  SizedBox(height: 15),
-                  CustomText(
-                    text: 'Select the type:',
-                  ),
-                  DropdownButton<String>(
-                    value: categoryType,
-                    icon: const Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: const TextStyle(color: KPrimaryColor, fontSize: 18),
-                    underline: Container(height: 2, color: Colors.black45),
-                    onChanged: (String? newValue) {
-                      changeType(newValue!);
-                    },
-                    items: categoryTypeList
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 10),
-                  CustomAddTextFormField(
-                    controller: nameController,
-                    //initialValue: widget.deviceModel.name,
-                    label: 'Device Name',
-                    validator: (String? value) {
-                      if (value!.isEmpty) {
-                        return 'Enter device name';
-                      } else
-                        return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  CustomAddTextFormField(
-                    controller: modelController,
-                    //initialValue: widget.deviceModel.model,
-                    label: 'Model Number',
-                    validator: (String? value) {
-                      if (value!.isEmpty) {
-                        return 'Enter model number';
-                      } else
-                        return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  CustomAddTextFormField(
-                    controller: osController,
-                    //initialValue: widget.deviceModel.os,
-                    label: 'Operating System',
-                    validator: (String? value) {
-                      if (value!.isEmpty) {
-                        return 'Enter operating system';
-                      } else
-                        return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  CustomAddTextFormField(
-                    controller: screenSizeController,
-                    // initialValue: widget.deviceModel.screenSize,
-                    label: 'Screen Size',
-                    validator: (String? value) {
-                      if (value!.isEmpty) {
-                        return 'Enter screen size';
-                      } else
-                        return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  CustomAddTextFormField(
-                    controller: batteryController,
-                    //initialValue: widget.deviceModel.battery,
-                    label: 'Battery',
-                    validator: (String? value) {
-                      if (value!.isEmpty) {
-                        return 'Enter battery';
-                      } else
-                        return null;
-                    },
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 200,
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: Colors.grey),
-                    ),
-                    child: Column(
-                      children: [
-                        TextButton(
-                            onPressed: () async {
-                              await Provider.of<MainProvider>(context,
-                                      listen: false)
-                                  .pickImages();
-                            },
-                            child: CustomText(
-                              text: 'Add Image',
-                              color: KPrimaryColor,
-                              alignment: Alignment.center,
-                            )),
-                        Expanded(
-                          child: GridView.count(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 5,
-                            children: List.generate(
-                                valueMain.selectedImages.length, (index) {
-                              File file = valueMain.selectedImages[index];
-                              return Image.file(
-                                file,
-                                width: 300,
-                                height: 300,
-                              );
-                            }),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: Text('No')),
+                                  TextButton(
+                                      onPressed: () async =>
+                                          await deleteDevice(value, context),
+                                      child: Text('Yes')),
+                                ],
+                              )
+                            ],
                           ),
                         ),
-                      ],
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.delete_outline)),
+            )
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Consumer<MainProvider>(
+                builder: (context, valueMain, child) => Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 150,
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Stack(
+                                  children: [
+                                    Image.network(
+                                      deviceModel!.imageUrl[index],
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: IconButton(
+                                          color: Colors.red.shade500,
+                                          icon: Icon(
+                                            Icons.cancel_outlined,
+                                          ),
+                                          onPressed: () async {
+                                            await deleteImage(index).then(
+                                                (value) => ScaffoldMessenger.of(
+                                                        context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(value))));
+                                          }),
+                                    )
+                                  ],
+                                ),
+                              ),
+                          itemCount: deviceModel!.imageUrl.length),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  isLoading
-                      ? CircularProgressIndicator()
-                      : CustomElevatedButton(
-                          text: 'Update',
-                          onPressed: () => update(context, valueMain),
-                        )
-                ],
+                    SizedBox(height: 15),
+                    CustomText(
+                      text: 'Select the type:',
+                    ),
+                    DropdownButton<String>(
+                      value: categoryType,
+                      icon: const Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 16,
+                      style:
+                          const TextStyle(color: KPrimaryColor, fontSize: 18),
+                      underline: Container(height: 2, color: Colors.black45),
+                      onChanged: (String? newValue) {
+                        changeType(newValue!);
+                      },
+                      items: categoryTypeList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 10),
+                    CustomAddTextFormField(
+                      controller: nameController,
+                      //initialValue: widget.deviceModel.name,
+                      label: 'Device Name',
+                      validator: (String? value) {
+                        if (value!.isEmpty) {
+                          return 'Enter device name';
+                        } else
+                          return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomAddTextFormField(
+                      controller: modelController,
+                      //initialValue: widget.deviceModel.model,
+                      label: 'Model Number',
+                      validator: (String? value) {
+                        if (value!.isEmpty) {
+                          return 'Enter model number';
+                        } else
+                          return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomAddTextFormField(
+                      controller: osController,
+                      //initialValue: widget.deviceModel.os,
+                      label: 'Operating System',
+                      validator: (String? value) {
+                        if (value!.isEmpty) {
+                          return 'Enter operating system';
+                        } else
+                          return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomAddTextFormField(
+                      controller: screenSizeController,
+                      // initialValue: widget.deviceModel.screenSize,
+                      label: 'Screen Size',
+                      validator: (String? value) {
+                        if (value!.isEmpty) {
+                          return 'Enter screen size';
+                        } else
+                          return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomAddTextFormField(
+                      controller: batteryController,
+                      //initialValue: widget.deviceModel.battery,
+                      label: 'Battery',
+                      validator: (String? value) {
+                        if (value!.isEmpty) {
+                          return 'Enter battery';
+                        } else
+                          return null;
+                      },
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 200,
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: Column(
+                        children: [
+                          TextButton(
+                              onPressed: () async {
+                                await Provider.of<MainProvider>(context,
+                                        listen: false)
+                                    .pickImages();
+                              },
+                              child: CustomText(
+                                text: 'Add Image',
+                                color: KPrimaryColor,
+                                alignment: Alignment.center,
+                              )),
+                          Expanded(
+                            child: GridView.count(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 5,
+                              mainAxisSpacing: 5,
+                              children: List.generate(
+                                  valueMain.selectedImages.length, (index) {
+                                File file = valueMain.selectedImages[index];
+                                return Image.file(
+                                  file,
+                                  width: 300,
+                                  height: 300,
+                                );
+                              }),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    isLoading
+                        ? CircularProgressIndicator()
+                        : CustomElevatedButton(
+                            text: 'Update',
+                            onPressed: () => update(context, valueMain),
+                          )
+                  ],
+                ),
               ),
             ),
           ),

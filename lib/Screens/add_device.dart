@@ -60,8 +60,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Device"),
-        centerTitle: true,
-      ),
+              ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),

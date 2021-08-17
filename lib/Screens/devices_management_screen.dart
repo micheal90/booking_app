@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DevicesManagementScreen extends StatelessWidget {
+ 
   Future<void> deleteDevice(
       MainProvider value, String id, BuildContext context) async {
     try {
@@ -23,6 +24,7 @@ class DevicesManagementScreen extends StatelessWidget {
           SnackBar(content: Text('Occurred error!... try again')));
     }
   }
+ 
 
   @override
   Widget build(BuildContext context) {

@@ -159,11 +159,14 @@ class MainProvider with ChangeNotifier {
   }
 
   Future fetchDataAfterCheck() async {
-    await getAllDevices();
     isLoading.value = true;
+    await getAllDevices();
+
     await getAllReservedDevices();
     await getAllorderReservDevices();
     await filterDevices();
+    isLoading.value = false;
+    notifyListeners();
   }
 
   Future getAllDevices() async {
@@ -406,40 +409,44 @@ class MainProvider with ChangeNotifier {
 
   Future updateDevice({
     required String deviceId,
-    String? deviceName,
-    String? modNum,
-    String? os,
-    String? type,
-    String? screenSize,
-    String? battery,
+    required String deviceName,
+    required String modNum,
+    required String os,
+    required String type,
+    required bool isBooked,
+    required List<String> imageUrl,
+    required String screenSize,
+    required String battery,
   }) async {
     try {
       //upload images to firebase storage and get urls
-      var imageUrls =
+      var newImageUrls =
           await FirebaseStorageImage().uploadFiles(selectedImages, deviceId);
       //get the rest imageUrl from device and add to new imageUrls
 
-      var device =
-          allDevicesList.firstWhere((element) => element.id == deviceId);
-      if (device.imageUrl.isNotEmpty) {
-        device.imageUrl.forEach((url) {
-          imageUrls.add(url);
+      // var device =
+      //     allDevicesList.firstWhere((element) => element.id == deviceId);
+      if (imageUrl.isNotEmpty) {
+        imageUrl.forEach((url) {
+          newImageUrls.add(url);
         });
       }
       // update new data
       await firestoreDevice.updateDevice(
-          deviceId: deviceId,
-          model: modNum,
-          battery: battery,
-          deviceName: deviceName,
-          imageUrls: imageUrls,
-          os: os,
-          screenSize: screenSize,
-          type: type);
+        deviceId: deviceId,
+        model: modNum,
+        battery: battery,
+        deviceName: deviceName,
+        imageUrls: newImageUrls,
+        os: os,
+        isBooked: isBooked,
+        screenSize: screenSize,
+        type: type,
+      );
       //refetch all device
       await fetchDataAndCheckDate();
       // clear lists after add to database
-      imageUrls.clear();
+      newImageUrls.clear();
       selectedImages.clear();
     } on FirebaseException catch (e) {
       throw e;
@@ -501,19 +508,19 @@ class MainProvider with ChangeNotifier {
   }
 
   //delete imageUrl localy
-  Future deleteImage(int index, String id) async {
-    print(index);
-    print(id);
-    var device = allDevicesList.firstWhere((element) => element.id == id);
-    if (device.imageUrl.length > 1) {
-      //remove image localy
-      device.imageUrl.removeAt(index);
-      notifyListeners();
-      return 'image has been deleted';
-    } else {
-      return 'You can not remove all images';
-    }
-  }
+  // Future deleteImage(int index, String id) async {
+  //   print(index);
+  //   print(id);
+  //   var device = allDevicesList.firstWhere((element) => element.id == id);
+  //   if (device.imageUrl.length > 1) {
+  //     //remove image localy
+  //     device.imageUrl.removeAt(index);
+  //     notifyListeners();
+  //     return 'image has been deleted';
+  //   } else {
+  //     return 'You can not remove all images';
+  //   }
+  // }
 
   void changeStartDateTime(DateTime date) {
     startDateTime = date;
