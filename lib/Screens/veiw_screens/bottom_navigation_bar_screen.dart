@@ -7,7 +7,6 @@ import 'package:booking_app/Screens/users_management_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/home_screen.dart';
 import 'package:booking_app/providers/main_provider.dart';
 
-import '../../constants.dart';
 
 class BottomNavigationBarScreen extends StatefulWidget {
   @override

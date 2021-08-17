@@ -1,12 +1,10 @@
 import 'package:booking_app/Screens/login_screen.dart';
 import 'package:booking_app/Screens/splash_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/bottom_navigation_bar_screen.dart';
-import 'package:booking_app/constants.dart';
 import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/providers/main_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -33,8 +31,9 @@ class MyApp extends StatelessWidget {
                 title: 'Booking App',
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData(
-                  primarySwatch: Colors.blue,
-                ),
+                    primarySwatch: Colors.blue,
+                    appBarTheme: AppBarTheme(
+                        backwardsCompatibility: false, titleSpacing: 0)),
                 home: snapshot.connectionState == ConnectionState.waiting
                     ? SplashScreen()
                     : valueAuth.isAuth

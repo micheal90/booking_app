@@ -192,13 +192,15 @@ class AuthProvider with ChangeNotifier {
 
   Future deleteEmployee(String employeeId) async {
     try {
-      await firestoreUsers.deleteEmployee(employeeId);
+          await firestoreUsers.deleteEmployee(employeeId);
       await getEmployee();
       notifyListeners();
     } catch (e) {
       throw e;
     }
   }
+
+  
 
   Future deleteAdmin(String adminId) async {
     try {

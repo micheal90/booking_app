@@ -49,84 +49,87 @@ class _ReservedDevicesScreenState extends State<ReservedDevicesScreen> {
           title: Text('Reserved Devices'),
         ),
         body: Consumer<MainProvider>(
-          builder: (context, valueMain, child) => valueMain
-                  .reservedDevicesList.isEmpty
-              ? Center(
-                  child: CustomText(
-                  text: 'No device reserved yet',
-                  alignment: Alignment.center,
-                  fontSize: 22,
-                ))
-              : NativeDataTable.builder(
-                  showSelect: false,
-                  totalItems: valueMain.reservedDevicesList.length,
-                  alwaysShowDataTable: false,
-                  sortAscending: _sortAscending,
-                  sortColumnIndex: _sortColumnIndex,
-                  mobileIsLoading: CircularProgressIndicator(),
-                  onRefresh: () async => await valueMain.refresh(),
-                  showSort: true,
-                  handleNext: () {},
-                  columns: [
-                    DataColumn(
-                        label: Text('Device Name'),
-                        onSort: (int columnIndex, bool ascending) =>
-                            _sort<String>(
-                                (ReserveDeviceModel d) => d.deviceName,
-                                columnIndex,
-                                ascending)),
-                    DataColumn(label: Text('Type')),
-                    DataColumn(label: Text('Period')),
-                    DataColumn(label: Text('By Employee')),
-                  ],
-                  itemCount: valueMain.reservedDevicesList.length,
-                  itemBuilder: (index) => DataRow(cells: [
-                    DataCell(
-                        Text(valueMain.reservedDevicesList[index].deviceName)),
-                    DataCell(Text(valueMain.reservedDevicesList[index].type)),
-                    DataCell(Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('From:'),
-                            Text(DateFormat.yMd().format(DateTime.parse(
-                                valueMain
-                                    .reservedDevicesList[index].startDate))),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('To:'),
-                            Text(DateFormat.yMd().format(DateTime.parse(
-                                valueMain.reservedDevicesList[index].endDate))),
-                          ],
-                        ),
+          builder: (context, valueMain, child) => valueMain.isLoading.value
+              ? Center(child: CircularProgressIndicator())
+              : valueMain.reservedDevicesList.isEmpty
+                  ? Center(
+                      child: CustomText(
+                      text: 'No device reserved yet',
+                      alignment: Alignment.center,
+                      fontSize: 22,
+                    ))
+                  : NativeDataTable.builder(
+                      showSelect: false,
+                      totalItems: valueMain.reservedDevicesList.length,
+                      alwaysShowDataTable: false,
+                      sortAscending: _sortAscending,
+                      sortColumnIndex: _sortColumnIndex,
+                      mobileIsLoading: CircularProgressIndicator(),
+                      onRefresh: () async => await valueMain.refresh(),
+                      showSort: true,
+                      handleNext: () {},
+                      columns: [
+                        DataColumn(
+                            label: Text('Device Name'),
+                            onSort: (int columnIndex, bool ascending) =>
+                                _sort<String>(
+                                    (ReserveDeviceModel d) => d.deviceName,
+                                    columnIndex,
+                                    ascending)),
+                        DataColumn(label: Text('Type')),
+                        DataColumn(label: Text('Period')),
+                        DataColumn(label: Text('By Employee')),
                       ],
-                    )),
-                    DataCell(
-                      Consumer<AuthProvider>(
-                        builder: (context, valueAuth, child) => Row(
+                      itemCount: valueMain.reservedDevicesList.length,
+                      itemBuilder: (index) => DataRow(cells: [
+                        DataCell(Text(
+                            valueMain.reservedDevicesList[index].deviceName)),
+                        DataCell(
+                            Text(valueMain.reservedDevicesList[index].type)),
+                        DataCell(Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(valueAuth
-                                .findEmployeeById(
-                                    valueMain.reservedDevicesList[index].userId)
-                                .name),
-                            SizedBox(
-                              width: 5,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('From:'),
+                                Text(DateFormat.yMd().format(DateTime.parse(
+                                    valueMain.reservedDevicesList[index]
+                                        .startDate))),
+                              ],
                             ),
-                            Text(valueAuth
-                                .findEmployeeById(
-                                    valueMain.reservedDevicesList[index].userId)
-                                .lastName),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('To:'),
+                                Text(DateFormat.yMd().format(DateTime.parse(
+                                    valueMain
+                                        .reservedDevicesList[index].endDate))),
+                              ],
+                            ),
                           ],
+                        )),
+                        DataCell(
+                          Consumer<AuthProvider>(
+                            builder: (context, valueAuth, child) => Row(
+                              children: [
+                                Text(valueAuth
+                                    .findEmployeeById(valueMain
+                                        .reservedDevicesList[index].userId)
+                                    .name),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(valueAuth
+                                    .findEmployeeById(valueMain
+                                        .reservedDevicesList[index].userId)
+                                    .lastName),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ]),
                     ),
-                  ]),
-                ),
         ),
         drawer: MainDrawer(),
       ),

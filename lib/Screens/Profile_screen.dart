@@ -18,7 +18,6 @@ class ProfileScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Profile Screen'),
-          centerTitle: true,
           actions: [
             TextButton(
                 onPressed: () => Navigator.of(context).push(

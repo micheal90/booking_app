@@ -46,7 +46,9 @@ class _SchedulePlanningScreenState extends State<SchedulePlanningScreen> {
           title: Text('Schedule Planning'),
         ),
         body: Consumer<MainProvider>(
-          builder: (context, valueMain, child) => valueMain
+          builder: (context, valueMain, child) =>valueMain.isLoading.value
+              ? Center(child: CircularProgressIndicator())
+              : valueMain
                   .orderResvDevicesList.isEmpty
               ? Center(
                   child: CustomText(
