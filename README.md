@@ -1,5 +1,5 @@
 # booking_app
-##Screenshots
+### Screenshots
 
 ![login](https://user-images.githubusercontent.com/26098900/130141739-77f71889-2c20-4b1e-939e-69bd68a18712.jpg)
 ![reset password](https://user-images.githubusercontent.com/26098900/130141751-91885081-c753-446d-bbdb-3ceb790e3801.jpg)
