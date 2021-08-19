@@ -1,6 +1,5 @@
 # booking_app
 ### Screenshots
-<img src="https://user-images.githubusercontent.com/26098900/130141739-77f71889-2c20-4b1e-939e-69bd68a18712.jpg" width="100" height="100">
 ![login](https://user-images.githubusercontent.com/26098900/130141739-77f71889-2c20-4b1e-939e-69bd68a18712.jpg)
 ![reset password](https://user-images.githubusercontent.com/26098900/130141751-91885081-c753-446d-bbdb-3ceb790e3801.jpg)
 ![home screen](https://user-images.githubusercontent.com/26098900/130141784-b21fdee7-00c1-437d-bfdb-3489acafb369.jpg)
