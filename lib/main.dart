@@ -1,8 +1,11 @@
 import 'package:booking_app/Screens/login_screen.dart';
 import 'package:booking_app/Screens/splash_screen.dart';
 import 'package:booking_app/Screens/veiw_screens/bottom_navigation_bar_screen.dart';
+import 'package:booking_app/control_view.dart';
 import 'package:booking_app/providers/auth_provider.dart';
+import 'package:booking_app/providers/connectivity_provider.dart';
 import 'package:booking_app/providers/main_provider.dart';
+import 'package:booking_app/Screens/no_internet_connection_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +17,8 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider.value(
+          value: ConnectivityProvider()..startMonitoring()),
       ChangeNotifierProvider.value(value: AuthProvider()),
       ChangeNotifierProvider.value(value: MainProvider()),
     ],
@@ -26,8 +31,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: Future.delayed(Duration(seconds: 3)),
-        builder: (context, snapshot) => Consumer<AuthProvider>(
-              builder: (context, valueAuth, child) => MaterialApp(
+        builder: (context, snapshot) => Consumer<ConnectivityProvider>(
+              builder: (context, valueConnectivity, child) => MaterialApp(
                 title: 'Booking App',
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData(
@@ -36,15 +41,9 @@ class MyApp extends StatelessWidget {
                         backwardsCompatibility: false, titleSpacing: 0)),
                 home: snapshot.connectionState == ConnectionState.waiting
                     ? SplashScreen()
-                    : valueAuth.isAuth
-                        ? BottomNavigationBarScreen()
-                        : FutureBuilder(
-                            future: valueAuth.tryAutoLogIn(),
-                            builder: (context, snapshot) =>
-                                snapshot.connectionState ==
-                                        ConnectionState.waiting
-                                    ? SplashScreen()
-                                    : LoginScreen()),
+                    : valueConnectivity.isOnline
+                        ? ControlView()
+                        : NoInternetConnectionScreen(),
               ),
             ));
   }
