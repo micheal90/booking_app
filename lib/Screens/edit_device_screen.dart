@@ -55,9 +55,16 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
   void update(BuildContext context, MainProvider value) async {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
+    if (deviceModel!.imageUrl.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('At least one image should be added')));
+      return;
+    }
+
     setState(() {
       isLoading = true;
     });
+
     try {
       await value.updateDevice(
         deviceId: deviceModel!.id,
@@ -101,17 +108,17 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
     }
   }
 
-  Future deleteImage(int index) async {
-    //var device = allDevicesList.firstWhere((element) => element.id == id);
-    if (deviceModel!.imageUrl.length > 1) {
+  void deleteImage(int index) async {
+    if (deviceModel!.imageUrl.length > 0) {
+      //store imageUrl in list for deleted from fireStorage after update device
+      Provider.of<MainProvider>(context, listen: false)
+          .selectedImageUrlDeleted
+          .add(deviceModel!.imageUrl[index]);
+
       //remove image localy
       setState(() {
         deviceModel!.imageUrl.removeAt(index);
       });
-
-      return 'image has been deleted';
-    } else {
-      return 'You can not remove all images';
     }
   }
 
@@ -135,6 +142,7 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
                           TextButton(
                             onPressed: () async {
                               await valueMain.fetchDataAfterCheck();
+                              valueMain.selectedImages.clear();
                               Navigator.of(context).pop(true);
                             },
                             child: new Text('Yes'),
@@ -155,13 +163,6 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text("Edit Device"),
-          // leading: IconButton(
-          //     onPressed: () async {
-          //       await Provider.of<MainProvider>(context, listen: false)
-          //           .fetchDataAfterCheck();
-          //       Navigator.pop(context);
-          //     },
-          //     icon: Icon(Icons.arrow_back)),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 10),
@@ -230,9 +231,16 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
                                     const EdgeInsets.symmetric(horizontal: 8),
                                 child: Stack(
                                   children: [
-                                    Image.network(
-                                      deviceModel!.imageUrl[index],
-                                    ),
+                                    deviceModel!.imageUrl.first.isEmpty
+                                        ? Container()
+                                        : Container(
+                                            height: 140,
+                                            width: 140,
+                                            child: Image.network(
+                                              deviceModel!.imageUrl[index],
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
                                     Positioned(
                                       top: 0,
                                       right: 0,
@@ -241,13 +249,7 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
                                           icon: Icon(
                                             Icons.cancel_outlined,
                                           ),
-                                          onPressed: () async {
-                                            await deleteImage(index).then(
-                                                (value) => ScaffoldMessenger.of(
-                                                        context)
-                                                    .showSnackBar(SnackBar(
-                                                        content: Text(value))));
-                                          }),
+                                          onPressed: () => deleteImage(index)),
                                     )
                                   ],
                                 ),
@@ -381,6 +383,7 @@ class _EditDeviceScreenState extends State<EditDeviceScreen> {
                                   file,
                                   width: 300,
                                   height: 300,
+                                  fit: BoxFit.fill,
                                 );
                               }),
                             ),

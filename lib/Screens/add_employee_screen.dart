@@ -56,7 +56,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Employee"),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(

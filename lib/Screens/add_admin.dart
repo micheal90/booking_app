@@ -52,7 +52,6 @@ class _AddAdminState extends State<AddAdmin> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Addmin"),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -103,17 +102,15 @@ class _AddAdminState extends State<AddAdmin> {
                   ),
                   CustomAddTextFormField(
                     controller: _passwordController,
-                    isPassword: valueAuth.isShowPassword.value
-                                      ? true
-                                      : false,
-                   suffixIcon: IconButton(
-                                    icon: valueAuth.isShowPassword.value
-                                        ? Icon(Icons.visibility_off_rounded)
-                                        : Icon(Icons.visibility),
-                                    onPressed: () {
-                                      valueAuth.changeShowPassword();
-                                    },
-                                  ),
+                    isPassword: valueAuth.isShowPassword.value ? true : false,
+                    suffixIcon: IconButton(
+                      icon: valueAuth.isShowPassword.value
+                          ? Icon(Icons.visibility_off_rounded)
+                          : Icon(Icons.visibility),
+                      onPressed: () {
+                        valueAuth.changeShowPassword();
+                      },
+                    ),
                     label: 'password',
                     validator: (String? value) {
                       if (value!.isEmpty || value.length < 6) {

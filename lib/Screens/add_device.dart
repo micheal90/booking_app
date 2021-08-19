@@ -23,9 +23,9 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
   String categoryType = 'ANDROID';
 
   void changeType(String type) {
-   setState(() {
+    setState(() {
       categoryType = type;
-   });
+    });
   }
 
   void addDevice(BuildContext context, MainProvider value) async {
@@ -56,11 +56,18 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    Provider.of<MainProvider>(context, listen: false).selectedImages.clear();
+
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Device"),
-              ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -74,7 +81,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
                     text: 'Select the type:',
                   ),
                   DropdownButton<String>(
-                    value:categoryType,
+                    value: categoryType,
                     icon: const Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
@@ -83,7 +90,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
                     onChanged: (String? newValue) {
                       changeType(newValue!);
                     },
-                    items:categoryTypeList
+                    items: categoryTypeList
                         .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -194,8 +201,11 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
                             child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           itemCount: valueMain.selectedImages.length,
-                          itemBuilder: (context, index) =>
-                              Image.file(valueMain.selectedImages[index]),
+                          itemBuilder: (context, index) => Container(
+                            width: 140,
+                            height: 140,
+                            child: Image.file(valueMain.selectedImages[index],fit: BoxFit.fill,),
+                          ),
                           separatorBuilder: (BuildContext context, int index) =>
                               SizedBox(
                             width: 5,

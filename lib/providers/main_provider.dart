@@ -140,6 +140,7 @@ class MainProvider with ChangeNotifier {
   List<ReserveDeviceModel> orderResvDevicesList = [];
 
   List<File> selectedImages = [];
+  List<String> selectedImageUrlDeleted = [];
 
   DateTime? startDateTime;
   DateTime? endDateTime;
@@ -423,9 +424,6 @@ class MainProvider with ChangeNotifier {
       var newImageUrls =
           await FirebaseStorageImage().uploadFiles(selectedImages, deviceId);
       //get the rest imageUrl from device and add to new imageUrls
-
-      // var device =
-      //     allDevicesList.firstWhere((element) => element.id == deviceId);
       if (imageUrl.isNotEmpty) {
         imageUrl.forEach((url) {
           newImageUrls.add(url);
@@ -443,11 +441,17 @@ class MainProvider with ChangeNotifier {
         screenSize: screenSize,
         type: type,
       );
+      //delete selectedImageUrlDeleted from firestorage
+      selectedImageUrlDeleted.forEach((element) async {
+        await FirebaseStorageImage().deleteImageByUrl(element);
+      });
+
       //refetch all device
       await fetchDataAndCheckDate();
       // clear lists after add to database
       newImageUrls.clear();
       selectedImages.clear();
+      selectedImageUrlDeleted.clear();
     } on FirebaseException catch (e) {
       throw e;
     } catch (e) {

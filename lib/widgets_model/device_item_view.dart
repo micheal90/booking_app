@@ -27,7 +27,7 @@ class DeviceItemView extends StatelessWidget {
           child: FadeInImage(
             placeholder: AssetImage('assets/images/loading.png'),
             image: NetworkImage(
-              imageUrl.isNotEmpty?imageUrl.first:notImageAvailableUrl,
+              imageUrl.first.isEmpty?notImageAvailableUrl:imageUrl.first,
             ),
             imageErrorBuilder: (context, error, stackTrace) =>
                 new Icon(Icons.error_outline_outlined),

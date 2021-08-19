@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class FirebaseStorageImage {
-  
   Future<List<String>> uploadFiles(List<File> _images, String deviceId) async {
     var imageUrls = await Future.wait(
         _images.map((_image) => uploadFile(_image, deviceId)));
@@ -20,5 +19,12 @@ class FirebaseStorageImage {
     await uploadTask.whenComplete(() => null);
 
     return await storageReference.getDownloadURL();
+  }
+
+  Future deleteImageByUrl(String imageUrl) async {
+    await firebase_storage.FirebaseStorage.instance
+        .refFromURL(imageUrl)
+        .delete()
+        .then((value) => print('done'));
   }
 }

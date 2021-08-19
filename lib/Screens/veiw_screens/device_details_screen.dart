@@ -42,7 +42,7 @@ class _DeviceDetailsScreenState extends State<DeviceDetailsScreen> {
                 style: TextStyle(
                     color: Colors.white, backgroundColor: Colors.black45),
               ),
-              background: deviceModel!.imageUrl.isEmpty
+              background: deviceModel!.imageUrl.first.isEmpty
                   ? Image.network(
                       notImageAvailableUrl,
                       fit: BoxFit.fill,

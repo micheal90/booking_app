@@ -46,88 +46,87 @@ class _SchedulePlanningScreenState extends State<SchedulePlanningScreen> {
           title: Text('Schedule Planning'),
         ),
         body: Consumer<MainProvider>(
-          builder: (context, valueMain, child) =>valueMain.isLoading.value
+          builder: (context, valueMain, child) => valueMain.isLoading.value
               ? Center(child: CircularProgressIndicator())
-              : valueMain
-                  .orderResvDevicesList.isEmpty
-              ? Center(
-                  child: CustomText(
-                  text: 'No scheduled reserved yet',
-                  alignment: Alignment.center,
-                  fontSize: 22,
-                ))
-              : NativeDataTable.builder(
-                  showSelect: false,
-                  totalItems: valueMain.orderResvDevicesList.length,
-                  alwaysShowDataTable: false,
-                  sortAscending: _sortAscending,
-                  sortColumnIndex: _sortColumnIndex,
-                  mobileIsLoading: CircularProgressIndicator(),
-                  onRefresh: () async =>
-                      await valueMain.getAllorderReservDevices(), //change end
-                  showSort: true,
-                  handleNext: () {},
-                  columns: [
-                    DataColumn(
-                        label: Text('Device Name'),
-                        onSort: (int columnIndex, bool ascending) =>
-                            _sort<String>(
-                                (ReserveDeviceModel d) => d.deviceName,
-                                columnIndex,
-                                ascending)),
-                    DataColumn(label: Text('Type')),
-                    DataColumn(label: Text('Period')),
-                    DataColumn(label: Text('By Employee')),
-                  ],
-                  itemCount: valueMain.orderResvDevicesList.length,
-                  itemBuilder: (index) => DataRow(cells: [
-                    DataCell(
-                        Text(valueMain.orderResvDevicesList[index].deviceName)),
-                    DataCell(Text(valueMain.orderResvDevicesList[index].type)),
-                    DataCell(Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('From:'),
-                            Text(DateFormat.yMd().format(DateTime.parse(
-                                valueMain
-                                    .orderResvDevicesList[index].startDate))),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('To:'),
-                            Text(DateFormat.yMd().format(DateTime.parse(
-                                valueMain
-                                    .orderResvDevicesList[index].endDate))),
-                          ],
-                        ),
+              : valueMain.orderResvDevicesList.isEmpty
+                  ? Center(
+                      child: CustomText(
+                      text: 'No scheduled reserved yet',
+                      alignment: Alignment.center,
+                      fontSize: 22,
+                    ))
+                  : NativeDataTable.builder(
+                      showSelect: false,
+                      totalItems: valueMain.orderResvDevicesList.length,
+                      alwaysShowDataTable: false,
+                      sortAscending: _sortAscending,
+                      sortColumnIndex: _sortColumnIndex,
+                      mobileIsLoading: CircularProgressIndicator(),
+                      onRefresh: () async => await valueMain.refresh(),
+                      showSort: true,
+                      handleNext: () {},
+                      columns: [
+                        DataColumn(
+                            label: Text('Device Name'),
+                            onSort: (int columnIndex, bool ascending) =>
+                                _sort<String>(
+                                    (ReserveDeviceModel d) => d.deviceName,
+                                    columnIndex,
+                                    ascending)),
+                        DataColumn(label: Text('Type')),
+                        DataColumn(label: Text('Period')),
+                        DataColumn(label: Text('By Employee')),
                       ],
-                    )),
-                    DataCell(
-                      Consumer<AuthProvider>(
-                        builder: (context, valueAuth, child) => Row(
+                      itemCount: valueMain.orderResvDevicesList.length,
+                      itemBuilder: (index) => DataRow(cells: [
+                        DataCell(Text(
+                            valueMain.orderResvDevicesList[index].deviceName)),
+                        DataCell(
+                            Text(valueMain.orderResvDevicesList[index].type)),
+                        DataCell(Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(valueAuth
-                                .findEmployeeById(valueMain
-                                    .orderResvDevicesList[index].userId)
-                                .name),
-                            SizedBox(
-                              width: 5,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('From:'),
+                                Text(DateFormat.yMd().format(DateTime.parse(
+                                    valueMain.orderResvDevicesList[index]
+                                        .startDate))),
+                              ],
                             ),
-                            Text(valueAuth
-                                .findEmployeeById(valueMain
-                                    .orderResvDevicesList[index].userId)
-                                .lastName),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('To:'),
+                                Text(DateFormat.yMd().format(DateTime.parse(
+                                    valueMain
+                                        .orderResvDevicesList[index].endDate))),
+                              ],
+                            ),
                           ],
+                        )),
+                        DataCell(
+                          Consumer<AuthProvider>(
+                            builder: (context, valueAuth, child) => Row(
+                              children: [
+                                Text(valueAuth
+                                    .findEmployeeById(valueMain
+                                        .orderResvDevicesList[index].userId)
+                                    .name),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(valueAuth
+                                    .findEmployeeById(valueMain
+                                        .orderResvDevicesList[index].userId)
+                                    .lastName),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
+                      ]),
                     ),
-                  ]),
-                ),
         ),
         drawer: MainDrawer(),
       ),
