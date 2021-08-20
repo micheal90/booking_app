@@ -181,7 +181,7 @@ class MainProvider with ChangeNotifier {
 
   Future refresh() async {
     await fetchDataAndCheckDate();
-    print('ref');
+    print('refresh');
     notifyListeners();
   }
 

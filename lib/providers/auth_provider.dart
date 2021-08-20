@@ -30,15 +30,27 @@ class AuthProvider with ChangeNotifier {
     allUsers.clear();
     await getAdmin();
     await getEmployee();
+    print('get all user');
   }
 
   Future getAdmin() async {
     adminList.clear();
     var admins = await firestoreUsers.getAdmins();
     admins.forEach((admin) {
-      adminList.add(AdminModel.fromMap(admin.data()));
-      allUsers.add(AdminModel.fromMap(admin.data()));
+      //check if found admin in allUserlist
+      var isExistAdmin =
+          adminList.indexWhere((element) => element.id == admin.id);
+      if (isExistAdmin == -1) {
+        adminList.add(AdminModel.fromMap(admin.data()));
+      }
+      //check if found admin in allUserlist
+      var isExistAll = allUsers.indexWhere((element) => element.id == admin.id);
+      if (isExistAll == -1) {
+        allUsers.add(AdminModel.fromMap(admin.data()));
+      }
     });
+    print('get admin');
+
     notifyListeners();
   }
 
@@ -46,9 +58,20 @@ class AuthProvider with ChangeNotifier {
     employeeList.clear();
     var employees = await firestoreUsers.getEmployees();
     employees.forEach((emp) {
-      employeeList.add(EmployeeModel.fromMap(emp.data()));
-      allUsers.add(EmployeeModel.fromMap(emp.data()));
+      //check if found employee in employeeList
+      var isExistEmp =
+          employeeList.indexWhere((element) => element.id == emp.id);
+      if (isExistEmp == -1) {
+        employeeList.add(EmployeeModel.fromMap(emp.data()));
+      }
+
+      //check if found employee in allUserlist
+      var isExistAll = allUsers.indexWhere((element) => element.id == emp.id);
+      if (isExistAll == -1) {
+        allUsers.add(EmployeeModel.fromMap(emp.data()));
+      }
     });
+    print('get employee');
     notifyListeners();
   }
 
@@ -192,15 +215,13 @@ class AuthProvider with ChangeNotifier {
 
   Future deleteEmployee(String employeeId) async {
     try {
-          await firestoreUsers.deleteEmployee(employeeId);
+      await firestoreUsers.deleteEmployee(employeeId);
       await getEmployee();
       notifyListeners();
     } catch (e) {
       throw e;
     }
   }
-
-  
 
   Future deleteAdmin(String adminId) async {
     try {

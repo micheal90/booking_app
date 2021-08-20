@@ -1,6 +1,4 @@
-import 'package:booking_app/Screens/login_screen.dart';
 import 'package:booking_app/Screens/splash_screen.dart';
-import 'package:booking_app/Screens/veiw_screens/bottom_navigation_bar_screen.dart';
 import 'package:booking_app/control_view.dart';
 import 'package:booking_app/providers/auth_provider.dart';
 import 'package:booking_app/providers/connectivity_provider.dart';
