@@ -21,7 +21,7 @@ class _SchedulePlanningScreenState extends State<SchedulePlanningScreen> {
   void _sort<T>(Comparable<T> getField(ReserveDeviceModel r), int columnIndex,
       bool ascending) {
     Provider.of<MainProvider>(context, listen: false)
-        .reservedDevicesList
+        .orderResvDevicesList
         .sort((ReserveDeviceModel a, ReserveDeviceModel b) {
       if (!ascending) {
         final ReserveDeviceModel c = a;

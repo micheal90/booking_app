@@ -150,6 +150,7 @@ class MainProvider with ChangeNotifier {
   FirestorReserveDevices firestorReserveDevices = FirestorReserveDevices();
 
   Future fetchDataAndCheckDate() async {
+    print('fetchDataAndCheckDate');
     isLoading.value = true;
     await getAllDevices();
     await checkStartReserveDate();
@@ -160,9 +161,9 @@ class MainProvider with ChangeNotifier {
   }
 
   Future fetchDataAfterCheck() async {
+    print('fetchDataAfterCheck');
     isLoading.value = true;
     await getAllDevices();
-
     await getAllReservedDevices();
     await getAllorderReservDevices();
     await filterDevices();
@@ -171,6 +172,7 @@ class MainProvider with ChangeNotifier {
   }
 
   Future getAllDevices() async {
+    print('get allDevices');
     clearAllList();
     var devices = await firestoreDevice.getDevices();
     devices.forEach(
@@ -196,15 +198,35 @@ class MainProvider with ChangeNotifier {
   }
 
   Future getAllReservedDevices() async {
+    print('getAllReservedDevices');
+    reservedDevicesList.clear();
     var resDevs = await firestorReserveDevices.getAllreservedDevices();
-    resDevs.forEach((device) =>
-        reservedDevicesList.add(ReserveDeviceModel.fromMap(device.data())));
+    print(resDevs);
+    resDevs.forEach((element) {
+      var resDevice = ReserveDeviceModel.fromMap(element.data());
+      var isExest = reservedDevicesList
+          .indexWhere((element) => element.id == resDevice.id);
+      if (isExest == -1) {
+        reservedDevicesList.add(resDevice);
+      }
+    });
+    notifyListeners();
   }
 
   Future getAllorderReservDevices() async {
+    print('getAllorderReservDevices');
+    orderResvDevicesList.clear();
     var orders = await firestorReserveDevices.getAllOrder();
-    orders.forEach((order) =>
-        orderResvDevicesList.add(ReserveDeviceModel.fromMap(order.data())));
+    orders.forEach((element) {
+      var orderResv = ReserveDeviceModel.fromMap(element.data());
+      print(element);
+      var isExest = orderResvDevicesList
+          .indexWhere((element) => element.id == orderResv.id);
+      if (isExest == -1) {
+        orderResvDevicesList.add(orderResv);
+      }
+    });
+    notifyListeners();
   }
 
   Future checkStartReserveDate() async {
