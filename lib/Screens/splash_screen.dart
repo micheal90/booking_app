@@ -1,4 +1,5 @@
 import 'package:booking_app/widgets_model/custom_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -9,26 +10,46 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Column(
-        //mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.3,
-          ),
-          Image.asset(
-            'assets/icon/icon.png',
-            height: 150,
-            width: 150,
-          ),
-          Spacer(),
-          CustomText(
-            text: 'Developed by Micheal Hana',
-            alignment: Alignment.center,
-            fontSize: 22,
-            color: Colors.grey,
-            fontWeight: FontWeight.w600,
-          )
-        ],
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // SizedBox(
+            //   height: MediaQuery.of(context).size.height * 0.3,
+            // ),
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
+
+           Expanded(
+             flex: 3,
+             child: Column(children: [
+              Image.asset(
+              'assets/icon/icon.png',
+              height: 150,
+              width: 150,
+            ),
+            CustomText(
+              text: 'Booking App',
+              alignment: Alignment.center,
+              fontSize: 30,
+              fontWeight: FontWeight.w700,
+            ),
+           ],)),
+            Expanded(
+              flex: 1,
+              child: CustomText(
+                text: 'Developed by Micheal Hana',
+                alignment: Alignment.center,
+                fontSize: 22,
+                color: Colors.grey,
+                fontWeight: FontWeight.w600,
+              ),
+            )
+          ],
+        ),
       ),
     ));
   }

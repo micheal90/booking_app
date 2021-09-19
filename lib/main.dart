@@ -36,7 +36,8 @@ class MyApp extends StatelessWidget {
                 theme: ThemeData(
                     primarySwatch: Colors.blue,
                     appBarTheme: AppBarTheme(
-                        backwardsCompatibility: false, titleSpacing: 0)),
+                        titleSpacing: 0)),
+                       
                 home: snapshot.connectionState == ConnectionState.waiting
                     ? SplashScreen()
                     : valueConnectivity.isOnline
