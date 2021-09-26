@@ -2,12 +2,15 @@
 ### Video Recording
 https://youtu.be/Y-qFlO-8Tzc
 ### Screenshots
-![Slide1](https://user-images.githubusercontent.com/26098900/134802630-39b3f5a3-2349-4138-b8e2-f414aa963d95.PNG)
-![Slide2](https://user-images.githubusercontent.com/26098900/134802631-a583adf9-07da-4767-bc7e-dc4b9e387b42.PNG)
-![Slide3](https://user-images.githubusercontent.com/26098900/134802632-17c5066d-ab54-48ae-835c-a48ee9162a5d.PNG)
-![Slide4](https://user-images.githubusercontent.com/26098900/134802635-881f2a54-15b9-4255-8799-02918cacc8e9.PNG)
-![Slide5](https://user-images.githubusercontent.com/26098900/134802636-e74b3cf3-decc-4338-b8c8-012ca2568ae5.PNG)
-![Slide6](https://user-images.githubusercontent.com/26098900/134802637-c0321cdf-9596-416d-b343-a7c3a3652dee.PNG)
+
+![Slide1](https://user-images.githubusercontent.com/26098900/134802777-012a330f-9789-4cf8-a76a-cb359d6fd450.PNG)
+![Slide2](https://user-images.githubusercontent.com/26098900/134802779-6d9bf1f0-6d6d-45a6-9ae3-f8b57b3b3f52.PNG)
+![Slide3](https://user-images.githubusercontent.com/26098900/134802781-b4a07e86-a657-4fb3-9837-8aa4901aa892.PNG)
+![Slide4](https://user-images.githubusercontent.com/26098900/134802783-957ae6c1-d228-44d5-844f-e4dce7e7cc37.PNG)
+![Slide5](https://user-images.githubusercontent.com/26098900/134802784-b1ee046d-2999-4f2f-ad6e-78293f857ae0.PNG)
+![Slide6](https://user-images.githubusercontent.com/26098900/134802785-c354c41b-4a71-4c33-81e0-5f3fd49fc761.PNG)
+
+
 
 
 
