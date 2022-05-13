@@ -8,7 +8,6 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -41,7 +40,6 @@ class ProfileScreen extends StatelessWidget {
                       ' ' +
                       valueAuth.adminModel!.lastName,
                 ),
-                
                 CustomListTileProfile(
                   leading: Icon(Icons.email),
                   title: 'Email',
@@ -58,9 +56,9 @@ class ProfileScreen extends StatelessWidget {
                           )));
                     },
                     icon: Icon(Icons.logout),
-                    label: CustomText(
-                      text: 'Log Out',
-                      color: Colors.red,
+                    label: Text(
+                      'Log Out',
+                      style: TextStyle(color: Colors.red),
                     ))
               ]),
             ),

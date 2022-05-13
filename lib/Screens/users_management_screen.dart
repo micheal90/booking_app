@@ -210,11 +210,11 @@ class UsersManagementScreen extends StatelessWidget {
 
   SpeedDial buildFloatingActionButton(BuildContext context) {
     return SpeedDial(
-      marginEnd: 18,
-      marginBottom: 20,
+      // marginEnd: 18,
+      // marginBottom: 20,
       icon: Icons.add,
       activeIcon: Icons.remove,
-      buttonSize: 56.0,
+      // buttonSize: 56.0,
       visible: true,
       closeManually: false,
       renderOverlay: false,
